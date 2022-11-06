@@ -1,0 +1,297 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
+  password: String!
+  avatar: String!
+  role: Int!
+  status: Int!
+  resetPasswordCode: Int!
+  activationCode: Int!
+  lastConnexion: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Meta {
+  itemCount: Float!
+  totalItems: Float!
+  itemsPerPage: Float!
+  totalPages: Float!
+  currentPage: Float!
+}
+
+type UsersPagination {
+  items: [User!]!
+  meta: Meta!
+}
+
+type LoginDto {
+  token: String!
+  user: User!
+}
+
+type Family {
+  id: String!
+  category: Category!
+  parentId: String
+  description: String!
+}
+
+type Category {
+  id: String!
+  label: String!
+  children: [Category!]!
+}
+
+type MessageReaction {
+  label: String!
+  value: Float!
+}
+
+type Message {
+  id: String!
+  body: String!
+  topicId: String!
+  messageId: String
+  responses: [Message!]!
+  reactions: [MessageReaction!]!
+  createdAt: DateTime
+  user: User
+}
+
+type Topic {
+  id: String!
+  title: String!
+  body: String!
+  createdAt: DateTime!
+  statistics: [Int!]!
+  user: User
+}
+
+type FileProperty {
+  name: String!
+  size: Float!
+}
+
+type Document {
+  id: String!
+  title: String!
+  files: [FileProperty!]!
+  description: String!
+  price: Float!
+  hidden: Boolean!
+  notifyUser: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  family: Family
+}
+
+type DocumentsPagination {
+  items: [Document!]!
+  meta: Meta!
+}
+
+type PaymentDocument {
+  document: Document!
+  price: Float!
+}
+
+type Payment {
+  id: String!
+  status: String!
+  note: String!
+  link: String
+  proof: String!
+  documents: [PaymentDocument!]!
+  downloadAt: DateTime
+  user: User!
+  createdAt: DateTime!
+}
+
+type PaymentsPagination {
+  items: [Payment!]!
+  meta: Meta!
+}
+
+type TopicsPagination {
+  items: [Topic!]!
+  meta: Meta!
+}
+
+type Query {
+  findOne: String!
+  usersPaginate(input: PaginationInput!): UsersPagination!
+  whoAmI: User
+  categories: [Category!]!
+  documentsPaginate(input: PaginationInput!): DocumentsPagination!
+  documentsSearch(input: SearchDocumentsInput!): [Document!]!
+  paymentsPaginate(input: PaginationInput!): PaymentsPagination!
+  myPaymentsPaginate(input: PaginationInput!): PaymentsPagination!
+  families: [Family!]!
+  topicsPaginate(input: PaginationInput!): TopicsPagination!
+  topicGet(id: String!): Topic
+  topicMessages(topicId: String!): [Message!]!
+}
+
+input PaginationInput {
+  to: String
+  from: String
+  keyword: String
+  page: Int!
+  limit: Int!
+}
+
+input SearchDocumentsInput {
+  title: String!
+}
+
+type Mutation {
+  userCreate(input: UserCreateInput!, avatar: Upload): User!
+  updatePassword(input: UpdatePasswordInput!): User
+  userUpdate(input: UserUpdateInput!, avatar: Upload): User!
+  userVerifyEmail(input: UserVerifyEmailInput!): User!
+  userResendEmailCreated(email: String!): Boolean!
+  sendCode(input: SendCodeInput!): Boolean!
+  resetPassword(input: ResetPasswordInput!): User!
+  login(input: AuthInput!): LoginDto!
+  categoryCreate(input: CategoryCreateInput!): Family!
+  familyUpdate(input: FamilyUpdateInput!): Family!
+  documentCreate(input: DocumentCreateInput!, files: [Upload!]!): Document!
+  paymentCreate(input: CreatePaymentInput!, proof: Upload!): Payment!
+  paymentStatus(input: PaymentStatusInput!): Payment!
+  familyRemove(id: String!): String!
+  topicCreate(input: TopicCreateInput!): Topic!
+  topicUpdate(input: TopicUpdateInput!): Topic!
+  messageCreate(input: MessageCreateInput!): Boolean!
+  reactMessage(input: MessageReactionInput!): Boolean!
+  messageUpdate(input: MessageUpdateInput!): Boolean!
+  messageRemove(id: String!): Boolean!
+  subjectRemove(id: String!): String!
+}
+
+input UserCreateInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  role: Float!
+  phone: String!
+  password: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UpdatePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input UserUpdateInput {
+  id: Float!
+  firstName: String!
+  lastName: String!
+  role: Float!
+  phone: String!
+}
+
+input UserVerifyEmailInput {
+  email: String!
+  activationCode: String!
+}
+
+input SendCodeInput {
+  email: String!
+}
+
+input ResetPasswordInput {
+  password: String!
+  code: String!
+  email: String!
+}
+
+input AuthInput {
+  email: String!
+  password: String!
+}
+
+input CategoryCreateInput {
+  parentId: String
+  label: String!
+  description: String!
+}
+
+input FamilyUpdateInput {
+  parentId: String
+  label: String!
+  description: String!
+  id: String!
+}
+
+input DocumentCreateInput {
+  familyId: String
+  title: String!
+  sizes: [Float!]!
+  description: String!
+  price: Float!
+  hidden: Boolean!
+}
+
+input CreatePaymentInput {
+  note: String!
+  documents: [PaymentCartInput!]!
+}
+
+input PaymentCartInput {
+  id: String!
+  price: Float!
+}
+
+input PaymentStatusInput {
+  id: String!
+  status: String!
+}
+
+input TopicCreateInput {
+  title: String!
+  body: String!
+  documentId: String!
+}
+
+input TopicUpdateInput {
+  title: String!
+  body: String!
+  documentId: String!
+  id: String!
+}
+
+input MessageCreateInput {
+  body: String!
+  topicId: String!
+  messageId: String
+}
+
+input MessageReactionInput {
+  messageId: String!
+  label: String!
+}
+
+input MessageUpdateInput {
+  id: String!
+  body: String!
+}
+
+type Subscription {
+  messageEvent: Message!
+}

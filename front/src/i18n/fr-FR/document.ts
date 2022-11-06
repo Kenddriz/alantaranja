@@ -1,0 +1,16 @@
+export default {
+  title: 'Title',
+  price: 'Price',
+  hidden: 'Hidden document',
+  isHidden: 'Hidden',
+  fileCount: 'File count',
+  size: 'Size',
+  type: 'Type',
+  types: 'Types',
+  uploaded: 'Document uploaded successfully !',
+  finished: 'Finished',
+  remainingTime: 'Remaining time',
+  downloadRate: 'Download rate',
+  filename: 'File name',
+  downloads: 'Files downloads',
+}
