@@ -4,17 +4,16 @@
     spinner-color="amber">
     <div class="absolute-center bg-transparent">
       <q-btn
-        outline
+        round
         v-if="modelValue && urlList.length"
-        color="primary"
+        color="amber"
         size="sm"
         icon="close"
         @click="close()"
       />
       <q-btn
-        outline
         v-else
-        color="primary"
+        color="amber"
         round
         size="sm"
         icon="photo_camera"

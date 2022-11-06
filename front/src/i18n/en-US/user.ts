@@ -40,5 +40,8 @@ export default {
   emailInvalid: 'Email invalid',
   verificationCode: 'Verification code',
   newPassword: 'New password',
+  currentPassword: 'Current password',
   resetPassword: 'Reset password',
+  passwordUpdate: 'Update password',
+  updateInfos: 'Generale infos'
 }

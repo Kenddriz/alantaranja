@@ -99,7 +99,7 @@
       :key="index">
       <q-item-section avatar top>
         <q-avatar color="grey-3">
-          <q-img v-if="sub.user.avatar" :src="getImageV2(sub.user.avatar)" />
+          <q-img v-if="sub.user.avatar" :src="getImage(sub.user.avatar)" />
           <q-icon v-else name="person" color="black" />
         </q-avatar>
       </q-item-section>
@@ -132,7 +132,7 @@
   import {SUBJECT_FIELDS} from "src/graphql/topic/topic";
   import {InitialPagination, PAGINATION_META} from "src/utils/pagination";
   import {useQuery} from "@vue/apollo-composable";
-  import {getImageV2} from "src/utils/utils";
+  import {getImage} from "src/utils/utils";
 
   const filterOptions = [
     { label: 'date', value: 'created_at', icon: 'event' },

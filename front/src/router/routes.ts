@@ -137,7 +137,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         name: 'teacherProfile',
-        component: () => import('pages/admin/AdminDownload.vue'),
+        component: () => import('pages/ProfilePage.vue'),
       },
     ],
   },

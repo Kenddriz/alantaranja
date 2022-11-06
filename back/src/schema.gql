@@ -199,11 +199,11 @@ input UpdatePasswordInput {
 }
 
 input UserUpdateInput {
-  id: Float!
-  firstName: String!
-  lastName: String!
-  role: Float!
-  phone: String!
+  id: Float
+  firstName: String
+  lastName: String
+  role: Float
+  phone: String
 }
 
 input UserVerifyEmailInput {

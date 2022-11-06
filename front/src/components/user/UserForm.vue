@@ -11,6 +11,7 @@
               @update:modelValue="$emit('update:avatar', $event)"
               :modelValue="avatar" />
           </q-avatar>
+          <slot name="email"></slot>
         </div>
 
         <q-input
@@ -29,6 +30,7 @@
           :label="$t('user.firstName')" />
 
         <q-input
+          v-if="email !== undefined"
           :model-value="email"
           :rules="[v => checkEmail(v) || '']"
           lazy-rules="ondemand"
@@ -46,7 +48,7 @@
           dense
           :label="$t('user.phone')" />
 
-        <q-card-actions align="between">
+        <q-card-actions v-if="role !== undefined" align="between">
           <q-radio
             v-for="(rol, index) in roles"
             :key="index"
@@ -68,15 +70,15 @@ import {CONSTANTS, REGEXP} from 'src/utils/utils';
   import ImageInput from 'components/ImageInput.vue';
   import {useI18n} from "vue-i18n";
 
-  defineProps<{
+  withDefaults(defineProps<{
     firstName: string,
     lastName: string,
-    email: string,
+    email?: string,
     avatar: any,
     phone: string,
-    role: number,
+    role?: number,
     src?: string;
-  }>();
+  }>(), { email: undefined, role: undefined });
 
   const emits = defineEmits([
     'update:phone',

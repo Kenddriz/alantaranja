@@ -6,26 +6,28 @@ import { GqlAuthGuard } from '../../auth/jwt-auth.guard';
 import { Upload } from '../../shared/shared.input';
 import { removeFile, upload } from '../../utils';
 import { GraphQLUpload } from 'graphql-upload';
+import {CurrentUser} from "../../auth/current-user-decorator";
+import {StrategyType} from "../../auth/types/strategy.type";
 
 @InputType()
 export class UserUpdateInput {
-  @Field()
-  id: number;
+  @Field({ nullable: true })
+  id?: number;
 
-  @Field()
-  firstName: string;
+  @Field({ nullable: true })
+  firstName?: string;
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;
 
-  @Field()
-  role: number;
+  @Field({ nullable: true })
+  role?: number;
 
-  @Field()
-  phone: string;
+  @Field({ nullable: true })
+  phone?: string;
 }
 
-//@UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard)
 @Resolver()
 export class UpdateUserResolver {
   constructor(private userService: UserService) {}
@@ -35,9 +37,10 @@ export class UpdateUserResolver {
     @Args('input') input: UserUpdateInput,
     @Args({ name: 'avatar', type: () => GraphQLUpload, nullable: true })
     image: Upload,
+    @CurrentUser()strategy: StrategyType,
   ): Promise<User> {
     const { id, ...res } = input;
-    const user = await this.userService.findOneById(id);
+    const user = await this.userService.findOneById(id || strategy.id);
     Object.assign(user, res);
     if (image) {
       const folder = '/avatars/';
