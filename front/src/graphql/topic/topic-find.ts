@@ -1,9 +1,9 @@
 import {Message, QueryTopicGetArgs, Topic} from "src/graphql/types";
 import {gql} from "@apollo/client/core";
 import {SUBJECT_FIELDS} from "src/graphql/topic/topic";
-import {useRoute} from "vue-router";
+import {useRouter} from "vue-router";
 import {useQuery} from "@vue/apollo-composable";
-import {computed, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {defaultTopic, MESSAGE_FIELDS} from "src/graphql/topic/message";
 
 export type TopicData = {
@@ -34,13 +34,22 @@ export const makeTree = (items: any[], messageId?: string | null): any[] => {
 };
 
 export const useTopicFind = () => {
-  const { params } = useRoute();
-  const topicId = String(params['id']);
-  const { loading, result } = useQuery<TopicData, QueryTopicGetArgs>(TOPIC_QUERY, {
-    id: topicId,
+  const { currentRoute } = useRouter();
+
+  const topicId = ref<string>(String(currentRoute.value.params['id']));
+  const { loading, result, refetch } = useQuery<TopicData, QueryTopicGetArgs>(TOPIC_QUERY, {
+    id: topicId.value,
+  });
+
+  watch(() => currentRoute.value, val => {
+    topicId.value = String(val.params['id']);
+    refetch({ id: topicId.value });
   });
 
   const topic = computed(() => {
+
+    if(result.value?.topicGet) document.title = result.value?.topicGet.title;
+
     const sub = result.value || {
       topicGet: defaultTopic,
       topicMessages: []
@@ -64,10 +73,6 @@ export const useTopicFind = () => {
       messages: makeTree(messages, null),
     }
   });
-
-  watch(() => result.value?.topicGet, val => {
-    if(val) document.title = val.title;
-  }, { immediate: true });
 
   function responses(messageId: string) {
     return result.value?.topicMessages?.filter(m => m.messageId === messageId);

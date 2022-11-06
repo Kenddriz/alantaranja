@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Document} from "./document.entity";
-import {ILike, Repository} from "typeorm";
+import {Repository} from "typeorm";
 import {paginate, Pagination} from "nestjs-typeorm-paginate";
 import {PaginationInput} from "../shared/shared.input";
 
@@ -20,13 +20,17 @@ export class DocumentService {
     return this.repository.findOneBy({ id });
   }
 
-  async search(name: string): Promise<Document[]> {
-    return this.repository.find({
-      where: {
-        title: ILike(`%${name}%`),
-      },
-      take: 5,
-    });
+  async search(name: string, userId: number): Promise<Document[]> {
+    name = `%${name}%`;
+    return this.repository
+        .createQueryBuilder('doc')
+        .innerJoin('payments', 'pay', 'pay.user_id = :userId',{ userId })
+        .innerJoin('payment_documents', 'payDoc', 'pay.id = payDoc.payment_id')
+        .where('payDoc.document_id = doc.id')
+        .andWhere('pay.status = :status', { status: 'approved' })
+        .andWhere('doc.title ILIKE :name', { name })
+        .limit(5)
+        .getMany();
   }
 
 

@@ -6,10 +6,12 @@
 
         <q-file
           :model-value="files"
+          :rules="[(v) => v?.length || '']"
           @update:model-value="$emit('update:files', $event)"
           multiple
           clearable
           clear-icon="close"
+          hide-bottom-space
           dense>
           <template v-slot:prepend>
             <q-icon name="attach_file" />
@@ -17,7 +19,10 @@
         </q-file>
 
         <q-field
+          lazy-rules="ondemand"
+          :rules="[() => familyId?.length || '']"
           stack-label
+          hide-bottom-space
           label="Category">
           <template v-slot:prepend>
             <q-icon
@@ -32,12 +37,16 @@
         </q-field>
 
         <q-input
+          lazy-rules="ondemand"
+          :rules="[(v) => v?.length || '']"
+          hide-bottom-space
           :model-value="title"
           @update:model-value="$emit('update:title', $event)"
           dense
           label="Title" />
 
         <q-input
+          v-if="showPrice"
           type="number"
           :model-value="price"
           @update:model-value="$emit('update:price', Number($event))"
@@ -45,6 +54,9 @@
           label="Price" />
 
         <q-input
+          lazy-rules="ondemand"
+          :rules="[(v) => v?.length || '']"
+          hide-bottom-space
           :model-value="description"
           @update:model-value="$emit('update:description', $event)"
           type="textarea"
@@ -77,8 +89,8 @@
 
 <script lang="ts" setup>
   import CategoryDialog from 'components/CategoryDialog.vue';
-  import {makeTree} from 'src/utils/utils';
-  import {computed, reactive, ref, watch} from 'vue';
+  import {CONSTANTS, makeTree} from 'src/utils/utils';
+  import {computed, ref} from 'vue';
   import {Family} from 'src/graphql/types';
 
   const props = defineProps<{
@@ -110,6 +122,7 @@
     categoryDialog.value = false;
   }
 
+  const showPrice = ['0', '1'].includes(localStorage.getItem(CONSTANTS.role));
 </script>
 
 <style scoped>

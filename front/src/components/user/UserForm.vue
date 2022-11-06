@@ -47,21 +47,14 @@
           :label="$t('user.phone')" />
 
         <q-card-actions align="between">
-          <q-checkbox
+          <q-radio
+            v-for="(rol, index) in roles"
+            :key="index"
             :model-value="role"
+            name="role"
             @update:model-value="$emit('update:role', $event)"
-            :false-value="2"
-            :val="1"
-            :true-value="1"
-            :label="$tm('user.roles')[1]" />
-
-          <q-checkbox
-            :model-value="role"
-            @update:model-value="$emit('update:role', $event)"
-            :false-value="1"
-            :val="2"
-            :true-value="2"
-            :label="$tm('user.roles')[2]" />
+            :val="index"
+            :label="rol" />
         </q-card-actions>
       </q-card-section>
       <slot></slot>
@@ -70,9 +63,10 @@
 </template>
 
 <script lang="ts" setup>
-  import {REGEXP} from 'src/utils/utils';
+import {CONSTANTS, REGEXP} from 'src/utils/utils';
   import {isValidNumber} from 'libphonenumber-js';
   import ImageInput from 'components/ImageInput.vue';
+  import {useI18n} from "vue-i18n";
 
   defineProps<{
     firstName: string,
@@ -103,6 +97,12 @@
     }
     return !val || isValidNumber(val);
   }
+
+  const { tm } = useI18n();
+
+  const userRole = Number(localStorage.getItem(CONSTANTS.role));
+
+  const roles = (tm('user.roles') as string[]).filter((role, index) => index >= userRole && index > 0);
 </script>
 
 <style scoped>

@@ -21,7 +21,6 @@ export const ROUTES_DATA = {
       icon: 'bookmark',
       to: '/admin/documents'
     },
-
     {
       title: 'paths.user',
       icon: 'group',
@@ -58,6 +57,35 @@ export const ROUTES_DATA = {
       title: 'paths.profile',
       icon: 'person',
       to: '/my-space/profile'
+    },
+    {
+      title: 'paths.forum',
+      icon: 'comment',
+      to: '/forum'
+    },
+  ],
+  teacher: [
+    { title: 'paths.teacherDocument' },
+    {
+      title: 'new',
+      to: '/teacher/document-create',
+      icon: 'add',
+    },
+    {
+      title: 'list',
+      icon: 'list',
+      to: '/teacher/list'
+    },
+    { separator: true },
+    {
+      title: 'paths.teacherProfile',
+      icon: 'person',
+      to: '/teacher/profile'
+    },
+    {
+      title: 'paths.forum',
+      icon: 'comment',
+      to: '/forum'
     },
   ]
 }

@@ -10,11 +10,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: 'topic',
-        component: () => import('pages/forum/TopicPage.vue'),
-      },
-      {
-        path: 'create-topic',
+        alias: 'create-topic',
         name: 'createTopic',
         component: () => import('pages/forum/TopicCreatePage.vue'),
       },
@@ -120,6 +116,28 @@ const routes: RouteRecordRaw[] = [
         path: 'payment/list',
         name: 'paymentList',
         component: () => import('pages/my-space/PaymentsList.vue')
+      },
+    ],
+  },
+  {
+    path: '/teacher',
+    component: () => import('layouts/TeacherLayout.vue'),
+    children: [
+      {
+        path: '',
+        alias: 'document-create',
+        name: 'teacherDocument',
+        component: () => import('pages/teacher/TeacherDocumentCreate.vue'),
+      },
+      {
+        path: 'list',
+        name: 'teacherDocumentList',
+        component: () => import('pages/teacher/TeacherDocumentsList.vue'),
+      },
+      {
+        path: 'profile',
+        name: 'teacherProfile',
+        component: () => import('pages/admin/AdminDownload.vue'),
       },
     ],
   },

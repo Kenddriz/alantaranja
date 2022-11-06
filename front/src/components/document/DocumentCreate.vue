@@ -14,11 +14,13 @@
         <q-icon class="q-ml-md" size="sm" name="file_present" />
       </q-card-section>
     </template>
-    <q-card-actions align="center" class="q-px-md q-pb-md">
+    <q-card-actions
+      :align="right ? 'right': ''"
+      class="q-px-md q-pb-md">
       <q-btn
         type="submit"
-        class="full-width"
         rounded
+        :class="right ? '' : 'full-width'"
         :loading="loading"
         label="Upload"
         unelevated
@@ -54,7 +56,10 @@
   import {useI18n} from 'vue-i18n';
   import {useQuasar} from 'quasar';
 
-  defineProps<{ families: Family[] }>();
+  withDefaults(defineProps<{
+    right?: boolean,
+    families: Family[]
+  }>(), { right: false });
 
   const { t } = useI18n();
 
@@ -90,7 +95,7 @@
       hasUpload: true,
       fetchOptions: {
         onProgress: (prog: ProgressEvent) => {
-          progress.value = (prog.loaded / prog.total * 100).toFixed(2);
+          progress.value = Number((prog.loaded / prog.total * 100).toFixed(2));
         },
       },
     },

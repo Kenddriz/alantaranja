@@ -1,6 +1,6 @@
 <template>
-  <q-form @submit.prevent="submit" class="row flex justify-center">
-    <q-card class="col-12 col-md-9" flat>
+  <q-form @submit.prevent="submit">
+    <q-card flat>
       <q-card-section class="text-h6">
         {{ $t('paths.createTopic') }}
       </q-card-section>
@@ -21,31 +21,25 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-banner class="bg-grey-3">
+        <q-banner class="">
           {{ $t('topic.info') }}
           <template v-slot:action>
             <q-icon
               size="lg"
               name="info"
-              color="positive" />
+              color="amber" />
           </template>
         </q-banner>
       </q-card-section>
 
-      <q-card-section class="q-pt-none flex justify-between">
-        <q-btn
-          unelevated
-          icon="arrow_back"
-          :label="$t('back')"
-          to="/forum" />
-
+      <q-card-actions align="right" class="q-pt-none q-pr-md">
         <q-btn
           type="submit"
           color="primary"
-          unelevated
+          outline
           icon-right="post_add"
           :label="$t('submit')" />
-      </q-card-section>
+      </q-card-actions>
     </q-card>
   </q-form>
 </template>

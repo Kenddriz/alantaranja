@@ -92,6 +92,8 @@
     </q-item>
 
     <q-item
+      exact
+      exact-active-class="bg-brown-2"
       :to="`/forum/topic-details/${sub.id}`"
       v-for="(sub, index) in topic.items"
       :key="index">

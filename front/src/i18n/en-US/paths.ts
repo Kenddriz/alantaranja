@@ -3,9 +3,12 @@ export default  {
   dashboard: 'Dashboard',
   category: 'Categories',
   document: 'Documents',
+  teacherDocument: 'Documents',
+  teacherDocumentList: 'Documents List',
   payment: 'Payments',
   user: 'Users',
   profile: 'Profile',
+  teacherProfile: 'Profile',
   purchase: 'Purchase',
   welcome: 'Welcome',
   login: 'Login',
@@ -17,4 +20,5 @@ export default  {
   topic: 'Topics',
   createTopic: 'New topic',
   topicDetails: 'Topic details',
+  forum: 'Forum',
 }

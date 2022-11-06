@@ -1,43 +1,21 @@
 <template>
-  <q-inner-loading :showing="loading || rLoading">
-    <q-spinner color="amber" size="10em" />
-  </q-inner-loading>
   <q-card v-if="topic.get.user" flat>
-    <q-list bordered>
-      <q-expansion-item header-class="q-pa-md" :model-value="!topic.messages.length">
-        <template v-slot:header>
-          <q-item-section avatar>
-            <q-avatar
-              color="primary"
-              text-color="white">
-              <q-img
-                v-if="topic.get.user.avatar"
-                :src="getImageV2(topic.get.user.avatar)" />
-              <q-icon v-else name="person" color="white" />
-            </q-avatar>
-          </q-item-section>
-
-          <q-item-section>
-            <q-item-label>{{ topic.get.title }}</q-item-label>
-            <q-item-label caption>
-              {{getName(topic.get.user)}}
-            </q-item-label>
-          </q-item-section>
-        </template>
-
-        <q-card-section>
-          <span v-html="topic.get.body"></span>
-        </q-card-section>
-      </q-expansion-item>
-    </q-list>
-
     <q-card-actions class="q-pa-md" align="between">
       <q-btn
-        flat
-        @click="reply(topic.get.title)"
+        no-caps
         color="primary"
-        icon="reply"
-        :label="$t('topic.reply')" />
+        dense
+        flat
+        label="details"
+        icon="read_more">
+        <q-popup-proxy
+          transition-show="flip-up"
+          transition-hide="flip-down">
+          <q-banner>
+            <span v-html="topic.get.body" />
+          </q-banner>
+        </q-popup-proxy>
+      </q-btn>
 
       <div class="q-gutter-x-md">
         <q-btn
@@ -54,6 +32,13 @@
           flat
           :label="$t('topic.views', { count: topic.get.statistics[1] })"
           icon="visibility" />
+
+        <q-btn
+          flat
+          @click="reply(topic.get.title)"
+          color="primary"
+          icon="reply"
+          :label="$t('topic.reply')" />
       </div>
     </q-card-actions>
 
@@ -66,22 +51,19 @@
         :messages="topic.messages" />
     </q-card-section>
 
-    <q-card-actions align="between" class="q-pa-md">
+    <q-card-actions align="right" class="q-pa-md">
       <q-btn
         flat
-        color="primary"
-        to="/forum/"
-        icon="arrow_back"
-        :label="$t('back')" />
-
-      <q-btn
-        unelevated
         color="primary"
         @click="reply(topic.get.title)"
         icon="reply"
         :label="$t('topic.reply')" />
     </q-card-actions>
   </q-card>
+
+  <q-inner-loading :showing="loading || rLoading">
+    <q-spinner color="amber" size="10em" />
+  </q-inner-loading>
 </template>
 
 <script lang="ts" setup>
@@ -102,7 +84,7 @@
     dialog({
       component: defineAsyncComponent(() => import('components/topic/MessageCreate.vue')),
       componentProps: {
-        topicId,
+        topicId: topicId.value,
         title,
         messageId,
       }
