@@ -23,7 +23,7 @@ export class Message {
   @Column({ type: 'text', default: '' })
   body: string;
 
-  @ManyToOne(() => Topic)
+  @ManyToOne(() => Topic, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'topic_id' })
   topic: Topic;
   @Field(() => String)

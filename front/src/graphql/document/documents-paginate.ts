@@ -1,18 +1,25 @@
-import {DocumentsPagination, QueryDocumentsPaginateArgs, Document, PaginationInput} from 'src/graphql/types';
+import {
+  DocumentsPagination,
+  QueryDocumentsPaginateArgs,
+  Document,
+  PaginationInput,
+  DocumentsPaginationInput
+} from 'src/graphql/types';
 import {gql} from '@apollo/client';
 import {DOCUMENT_FIELDS} from 'src/graphql/document/document';
 import {InitialPagination, PAGINATION_META} from 'src/utils/pagination';
 import {useQuery} from '@vue/apollo-composable';
 import {computed, reactive} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {getExt} from 'src/utils/utils';
+import {CONSTANTS, getExt} from 'src/utils/utils';
+import {useRoute} from "vue-router";
 
 type Data = {
   documentsPaginate: DocumentsPagination;
 }
 
 const QUERY = gql`
-    query DocumentsPaginate($input: PaginationInput!){
+    query DocumentsPaginate($input: DocumentsPaginationInput!){
       documentsPaginate(input: $input) {
         items {
           ${DOCUMENT_FIELDS}
@@ -23,6 +30,7 @@ const QUERY = gql`
 `;
 
 export const useDocumentsPaginate = () => {
+  const { path } = useRoute();
   const { t } = useI18n();
   const columns = [
     {
@@ -89,12 +97,13 @@ export const useDocumentsPaginate = () => {
     },
   ];
 
-  const input = reactive<PaginationInput>({
-    limit: 50,
+  const input = reactive<DocumentsPaginationInput>({
+    limit: 15,
     page: 1,
     from: '',
     keyword: '',
     to: '',
+    userId: path.includes('teacher') ? Number(localStorage.getItem(CONSTANTS.userId)) : null,
   });
   const { loading, result } = useQuery<Data, QueryDocumentsPaginateArgs>(QUERY, { input });
 

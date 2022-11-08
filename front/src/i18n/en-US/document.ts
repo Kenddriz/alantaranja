@@ -13,4 +13,5 @@ export default {
   downloadRate: 'Download rate',
   filename: 'File name',
   downloads: 'Files downloads',
+  removeWarning: 'Are you sure to delete this document definitively ?',
 }

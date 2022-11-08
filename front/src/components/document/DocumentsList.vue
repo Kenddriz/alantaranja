@@ -6,12 +6,12 @@
     v-model:from="input.from"
     v-model:to="input.to">
     <q-btn
-      @click="dialog = true"
+      @click="categoryDialog = true"
       color="primary"
       icon="filter_alt"
       flat
       dense />
-    <CategoryDialog v-model="dialog">
+    <CategoryDialog v-model="categoryDialog">
       <q-tree
         class="col-12 col-sm-6"
         :nodes="makeTree(families, null)"
@@ -29,7 +29,7 @@
     :rows="doc.items"
     :columns="columns"
     :filter="filter"
-    :loading="loading"
+    :loading="loading || loadingRemove"
     row-key="id"
     flat>
     <template v-slot:top-right>
@@ -45,7 +45,17 @@
           flat
           round
           icon="edit" />
+
         <q-btn
+          @click="playDocument(props.row)"
+          dense
+          color="primary"
+          flat
+          round
+          icon="play_arrow" />
+
+        <q-btn
+          @click="remove(props.row.id)"
           dense
           color="deep-orange"
           flat
@@ -57,18 +67,20 @@
 </template>
 
 <script lang="ts" setup>
-  import {ref} from "vue";
+  import {defineAsyncComponent, ref} from "vue";
   import {useDocumentsPaginate} from "src/graphql/document/documents-paginate";
-  import {Family} from "src/graphql/types";
+  import {Family, Document} from "src/graphql/types";
   import CommonFilters from "../CommonFilters.vue";
   import CategoryDialog from "../CategoryDialog.vue";
   import {makeTree} from "src/utils/utils";
+  import {useQuasar} from "quasar";
+  import {useDocumentRemove} from "src/graphql/document/document-remove";
 
   defineProps<{
     families: Family[],
   }>();
 
-  const dialog = ref(false);
+  const categoryDialog = ref(false);
   const ticked = ref([]);
   const filter = ref('');
 
@@ -79,6 +91,16 @@
     columns
   } = useDocumentsPaginate();
 
+  const { dialog } = useQuasar();
+
+  function playDocument(doc: Document) {
+    dialog({
+      component: defineAsyncComponent(() => import("components/document/DocumentDetails.vue")),
+      componentProps: { doc },
+    })
+  }
+
+  const { remove, loadingRemove } = useDocumentRemove();
 </script>
 
 <style scoped>

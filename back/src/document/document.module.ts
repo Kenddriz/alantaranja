@@ -6,12 +6,14 @@ import {Document} from "./document.entity";
 import {DocumentFamilyFieldResolver} from "./resolvers/document-family-field-resolver";
 import {DocumentPaginateResolver} from "./resolvers/document-paginate-resolver";
 import {DocumentSearchResolver} from "./resolvers/document-search-resolver";
+import {DocumentRemoveResolver} from "./resolvers/document-remove-resolver";
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Document])],
   providers: [
     DocumentCreateResolver,
+    DocumentRemoveResolver,
     DocumentFamilyFieldResolver,
     DocumentPaginateResolver,
     DocumentSearchResolver,

@@ -135,7 +135,7 @@ type Query {
   usersPaginate(input: PaginationInput!): UsersPagination!
   whoAmI: User
   categories: [Category!]!
-  documentsPaginate(input: PaginationInput!): DocumentsPagination!
+  documentsPaginate(input: DocumentsPaginationInput!): DocumentsPagination!
   documentsSearch(input: SearchDocumentsInput!): [Document!]!
   paymentsPaginate(input: PaginationInput!): PaymentsPagination!
   myPaymentsPaginate(input: PaginationInput!): PaymentsPagination!
@@ -151,6 +151,15 @@ input PaginationInput {
   keyword: String
   page: Int!
   limit: Int!
+}
+
+input DocumentsPaginationInput {
+  to: String
+  from: String
+  keyword: String
+  page: Int!
+  limit: Int!
+  userId: Float
 }
 
 input SearchDocumentsInput {
@@ -169,6 +178,7 @@ type Mutation {
   categoryCreate(input: CategoryCreateInput!): Family!
   familyUpdate(input: FamilyUpdateInput!): Family!
   documentCreate(input: DocumentCreateInput!, files: [Upload!]!): Document!
+  documentRemove(id: String!): String!
   paymentCreate(input: CreatePaymentInput!, proof: Upload!): Payment!
   paymentStatus(input: PaymentStatusInput!): Payment!
   familyRemove(id: String!): String!

@@ -68,6 +68,15 @@ export type DocumentsPagination = {
   meta: Meta;
 };
 
+export type DocumentsPaginationInput = {
+  from?: InputMaybe<Scalars['String']>;
+  keyword?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  page: Scalars['Int'];
+  to?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['Float']>;
+};
+
 export type Family = {
   __typename?: 'Family';
   category: Category;
@@ -142,6 +151,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   categoryCreate: Family;
   documentCreate: Document;
+  documentRemove: Scalars['String'];
   familyRemove: Scalars['String'];
   familyUpdate: Family;
   login: LoginDto;
@@ -172,6 +182,11 @@ export type MutationCategoryCreateArgs = {
 export type MutationDocumentCreateArgs = {
   files: Array<Scalars['Upload']>;
   input: DocumentCreateInput;
+};
+
+
+export type MutationDocumentRemoveArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -333,7 +348,7 @@ export type Query = {
 
 
 export type QueryDocumentsPaginateArgs = {
-  input: PaginationInput;
+  input: DocumentsPaginationInput;
 };
 
 
@@ -452,11 +467,11 @@ export type UserCreateInput = {
 };
 
 export type UserUpdateInput = {
-  firstName: Scalars['String'];
-  id: Scalars['Float'];
-  lastName: Scalars['String'];
-  phone: Scalars['String'];
-  role: Scalars['Float'];
+  firstName?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['Float']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Scalars['Float']>;
 };
 
 export type UserVerifyEmailInput = {
@@ -548,6 +563,7 @@ export type ResolversTypes = {
   Document: ResolverTypeWrapper<Document>;
   DocumentCreateInput: DocumentCreateInput;
   DocumentsPagination: ResolverTypeWrapper<DocumentsPagination>;
+  DocumentsPaginationInput: DocumentsPaginationInput;
   Family: ResolverTypeWrapper<Family>;
   FamilyUpdateInput: FamilyUpdateInput;
   FileProperty: ResolverTypeWrapper<FileProperty>;
@@ -597,6 +613,7 @@ export type ResolversParentTypes = {
   Document: Document;
   DocumentCreateInput: DocumentCreateInput;
   DocumentsPagination: DocumentsPagination;
+  DocumentsPaginationInput: DocumentsPaginationInput;
   Family: Family;
   FamilyUpdateInput: FamilyUpdateInput;
   FileProperty: FileProperty;
@@ -716,6 +733,7 @@ export type MetaResolvers<ContextType = any, ParentType extends ResolversParentT
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   categoryCreate?: Resolver<ResolversTypes['Family'], ParentType, ContextType, RequireFields<MutationCategoryCreateArgs, 'input'>>;
   documentCreate?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDocumentCreateArgs, 'files' | 'input'>>;
+  documentRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDocumentRemoveArgs, 'id'>>;
   familyRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationFamilyRemoveArgs, 'id'>>;
   familyUpdate?: Resolver<ResolversTypes['Family'], ParentType, ContextType, RequireFields<MutationFamilyUpdateArgs, 'input'>>;
   login?: Resolver<ResolversTypes['LoginDto'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;

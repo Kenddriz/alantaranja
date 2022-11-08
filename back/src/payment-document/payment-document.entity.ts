@@ -10,7 +10,7 @@ export class PaymentDocument {
     id: string;
 
     @Field(() => Document)
-    @ManyToOne(() => Document)
+    @ManyToOne(() => Document, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'document_id'})
     document: Document;
     @RelationId((pDoc: PaymentDocument) => pDoc.document)

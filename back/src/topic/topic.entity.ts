@@ -34,13 +34,13 @@ export class Topic {
   @RelationId((topic: Topic) => topic.user)
   userId: number;
 
-  @ManyToOne(() => Document)
+  @ManyToOne(() => Document, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'document_id' })
   document: Document;
   @RelationId((topic: Topic) => topic.document)
   documentId: number;
 
-  @OneToMany(() => Message, (m) => m.topic, { onDelete: 'CASCADE' })
+  @OneToMany(() => Message, (m) => m.topic)
   messages: Message[];
 
   @Field()

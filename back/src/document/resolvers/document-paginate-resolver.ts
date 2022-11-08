@@ -1,4 +1,4 @@
-import {Args, Field, ObjectType, Query, Resolver} from "@nestjs/graphql";
+import {Args, Field, InputType, ObjectType, Query, Resolver} from "@nestjs/graphql";
 import {Document} from "../document.entity";
 import {DocumentService} from "../document.service";
 import {PaginationInput} from "../../shared/shared.input";
@@ -13,12 +13,18 @@ export class DocumentsPagination {
     meta: Meta;
 }
 
+@InputType()
+export class DocumentsPaginationInput extends PaginationInput{
+    @Field({ nullable: true })
+    userId?: number;
+}
+
 @Resolver(() => Document)
 export class DocumentPaginateResolver {
     constructor(private documentService: DocumentService) {}
 
     @Query(() => DocumentsPagination)
-    async documentsPaginate(@Args('input')input: PaginationInput):
+    async documentsPaginate(@Args('input')input: DocumentsPaginationInput):
         Promise<DocumentsPagination> {
         return this.documentService.paginate(input);
     }

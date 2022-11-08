@@ -88,7 +88,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         name: 'profile',
-        component: () => import('pages/admin/AdminDownload.vue'),
+        component: () => import('pages/ProfilePage.vue'),
       },
       {
         path: 'payments',
