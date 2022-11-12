@@ -42,6 +42,11 @@
   import {useDocumentsPaginate} from 'src/graphql/document/documents-paginate';
   import {useCart} from 'src/graphql/payment/cart';
   import CommonFilters from '../CommonFilters.vue';
+  import { watch } from 'vue';
+
+  const props = defineProps<{
+    categories: string[]
+  }>();
 
   const {
     loading: loadingDocs,
@@ -49,6 +54,10 @@
     doc,
     columns
   } = useDocumentsPaginate();
+
+  watch(() => props.categories, val => {
+    input.categories = val;
+  });
 
   columns.splice(6, 2);
 

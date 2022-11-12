@@ -16,6 +16,7 @@
     "@quasar/extras": "^1.0.0",
     "@vue/apollo-composable": "^4.0.0-alpha.19",
     "@vue/apollo-option": "^4.0.0-alpha.20",
+    "apexcharts": "^3.36.3",
     "apollo-upload-client": "^17.0.0",
     "graphql": "^16.6.0",
     "libphonenumber-js": "^1.10.13",

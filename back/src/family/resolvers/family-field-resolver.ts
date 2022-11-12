@@ -1,6 +1,5 @@
-import {Query, ResolveField, Resolver, Root} from "@nestjs/graphql";
+import {ResolveField, Resolver, Root} from "@nestjs/graphql";
 import {Family} from "../family.entity";
-import {FamilyService} from "../family.service";
 import {Category} from "../../category/category.entity";
 import {CategoryService} from "../../category/category.service";
 

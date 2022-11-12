@@ -10,6 +10,7 @@ import {TopicUserFieldResolver} from "./resolvers/topic-user-field-resolver";
 import {TopicStatisticsFieldResolver} from "./resolvers/topic-statistics-field-resolver";
 import {TopicGetResolver} from "./resolvers/topic-get-resolver";
 import {PubSub} from "graphql-subscriptions";
+import {TopicDocumentFieldResolver} from "./resolvers/topic-document-field-resolver";
 
 @Global()
 @Module({
@@ -19,6 +20,7 @@ import {PubSub} from "graphql-subscriptions";
     TopicsPaginateResolver,
     TopicUpdateResolver,
     TopicUserFieldResolver,
+    TopicDocumentFieldResolver,
     TopicStatisticsFieldResolver,
     TopicGetResolver,
     TopicRemoveResolver,

@@ -1,5 +1,5 @@
 <template>
-  <BuyDocument>
+  <BuyDocument :categories="categories">
     <template v-slot:filter>
       <q-btn
         @click="dialog = true"
@@ -14,7 +14,7 @@
           control-color="grey-6"
           node-key="key"
           tick-strategy="leaf"
-          v-model:ticked="ticked"
+          v-model:ticked="categories"
           default-expand-all
         />
       </CategoryDialog>
@@ -31,7 +31,7 @@
 
   const { families, loading } = useFamilies();
   const dialog = ref(false);
-  const ticked = ref<string[]>([]);
+  const categories = ref<string[]>([]);
   const filterCategories = ref<string>('');
 </script>
 

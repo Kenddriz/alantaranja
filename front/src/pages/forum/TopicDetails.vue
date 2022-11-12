@@ -12,6 +12,9 @@
           transition-show="flip-up"
           transition-hide="flip-down">
           <q-banner>
+            <div class="q-py-sm text-subtitle1">
+              <mark class="q-px-md">«{{ topic.get.document.title }}»</mark>
+            </div>
             <span v-html="topic.get.body" />
           </q-banner>
         </q-popup-proxy>

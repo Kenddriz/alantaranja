@@ -34,6 +34,10 @@ export class Payment {
   @Column({ type: 'varchar', length: 255})
   proof: string;
 
+  @Field()
+  @Column({ type: 'float', default: 0 })
+  amount: number;
+
   @Field(() => [PaymentDocument])
   @OneToMany(() => PaymentDocument, pDoc => pDoc.payment, { cascade: true })
   documents: PaymentDocument[];
@@ -41,6 +45,10 @@ export class Payment {
   @Field({ nullable: true })
   @Column({ type: 'timestamp', name: 'download_at', nullable: true })
   downloadAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ type: 'timestamp', name: 'expired_at', nullable: true })
+  expiredAt?: Date;
 
   @Field(() => User)
   @ManyToOne(() => User)

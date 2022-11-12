@@ -6,7 +6,8 @@
 
         <q-file
           :model-value="files"
-          :rules="[(v) => v?.length || '']"
+          lazy-rules="ondemand"
+          :rules="[(v) => validFile(v) || '']"
           @update:model-value="$emit('update:files', $event)"
           multiple
           clearable
@@ -101,6 +102,7 @@
     hidden: boolean;
     familyId: string,
     families: Family[],
+    isUpdate?: boolean,
   }>();
 
   const emits = defineEmits([
@@ -122,7 +124,12 @@
     categoryDialog.value = false;
   }
 
-  const showPrice = ['0', '1'].includes(localStorage.getItem(CONSTANTS.role));
+  const showPrice = ['0', '1'].includes(String(localStorage.getItem(CONSTANTS.role)));
+
+  function validFile(event: any[]) {
+    if(props?.isUpdate) return true;
+    return event?.length;
+  }
 </script>
 
 <style scoped>

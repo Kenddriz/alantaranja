@@ -32,6 +32,7 @@ module.exports = configure(function (/* ctx */) {
     boot: [
       'i18n',
       'apollo-client',
+      'apexcharts',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

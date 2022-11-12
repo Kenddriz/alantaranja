@@ -8,6 +8,9 @@ import {PaymentPaginateResolver} from "./resolvers/payment-paginate-resolver";
 import {MyPaymentsResolver} from "./resolvers/my-payments-resolver";
 import {PaymentUserFieldResolver} from "./resolvers/payment-user-field-resolver";
 import {PaymentStatusResolver} from "./resolvers/payment-status-resolver";
+import {PaymentsMonthlyResolver} from "./resolvers/payments-monthly-resolver";
+import {PaymentsStatusStatisticsResolver} from "./resolvers/payments-status-statistics-resolver";
+import {PaymentDownloadedResolver} from "./resolvers/payment-downloaded-resolver";
 
 @Global()
 @Module({
@@ -18,6 +21,9 @@ import {PaymentStatusResolver} from "./resolvers/payment-status-resolver";
     PaymentPaginateResolver,
     MyPaymentsResolver,
     PaymentUserFieldResolver,
+    PaymentsMonthlyResolver,
+    PaymentsStatusStatisticsResolver,
+    PaymentDownloadedResolver,
     PaymentStatusResolver,
     PaymentService
   ],

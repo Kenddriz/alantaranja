@@ -31,7 +31,7 @@
             accept="image/*"
             hide-upload-btn
             color="transparent"
-            text-color="dark"
+            text-color="primary"
             class="full-width"
             @added="proof = $event[0]"
             @removed="proof = null"
@@ -51,7 +51,6 @@
           <q-card-actions class="q-my-md q-px-none" align="right">
             <q-btn
               :disable="!cart.length || !proof"
-              padding="md"
               type="submit"
               :loading="loading"
               icon-right="check"

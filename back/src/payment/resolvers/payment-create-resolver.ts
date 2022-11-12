@@ -40,11 +40,13 @@ export class PaymentCreateResolver {
   ) {
     const { documents, ...res } = input;
     const payment = new Payment();
+    payment.amount = 0;
     payment.user = Object.assign(new User(), { id: strategy.id });
     payment.documents = documents.map(doc => {
       const pDoc = new PaymentDocument();
       pDoc.document = Object.assign(new Document(), { id: doc.id });
       pDoc.price = doc.price;
+      payment.amount += doc.price;
       return pDoc;
     })
     Object.assign(payment, res);

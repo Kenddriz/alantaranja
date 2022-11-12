@@ -114,7 +114,10 @@
           navigateTo('/auth/fill-registration');
         });
       } else {
-        notify(t('user.connected'));
+        notify({
+          color: 'positive',
+          message: t('user.connected')
+        });
         sessionStorage.clear();
         login(data.login.token, data.login.user);
 

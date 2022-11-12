@@ -2,7 +2,7 @@
   <q-dialog :maximized="maximized" ref="dialogRef">
     <q-card v-bind:style="{ 'width: 700px; max-width: 80vw;': !maximized }">
       <q-card-section class="text-subtitle1 flex justify-between items-center">
-        {{ doc.title }}
+        {{ docs[selectedIndex.docIndex]?.title }}
         <q-btn
           @click="maximized = !maximized"
           :icon="maximized ? 'fullscreen_exit' : 'fullscreen'"
@@ -16,19 +16,22 @@
 
         <q-list class="col-12 col-md-2">
           <q-item-label header>Fichiers</q-item-label>
-          <q-item
-            clickable
-            :key="index"
-            :active="index === selectedIndex"
-            active-class="bg-primary text-white"
-            @click="selectedIndex = index"
-            v-for="(file, index) in doc.files">
-            <q-item-section v-if="names = file.name.split('/')">
-              <q-item-label lines="1">
-                {{ names[names.length -1] }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
+          <template v-for="(doc, docIndex) in docs" :key="docIndex">
+            <q-item
+              clickable
+              :key="fileIndex"
+              :active="fileIndex + docIndex === selectedIndex.docIndex + selectedIndex.fileIndex"
+              active-class="bg-primary text-white"
+              @click="setSelected(docIndex, fileIndex)"
+              v-for="(file, fileIndex) in doc.files">
+              <q-item-section v-if="names = file.name.split('/')">
+                <q-item-label lines="1">
+                  {{ names[names.length -1] }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-separator />
+          </template>
         </q-list>
 
         <div class="col-12 col-md-10 q-pa-xs">
@@ -61,18 +64,25 @@
   import {useDialogPluginComponent} from "quasar";
   import { Document } from "src/graphql/types";
   import { getImageV2 } from "src/utils/utils";
-  import {computed, ref} from "vue";
+  import {computed, reactive, ref} from "vue";
   import {fileType} from "src/utils/file";
 
   const props = defineProps<{
-    doc: Document
+    docs: Document[]
   }>();
 
   const { dialogRef } = useDialogPluginComponent();
 
-  const selectedIndex = ref(0);
+  const selectedIndex = reactive({
+    docIndex: 0,
+    fileIndex: 0,
+  });
 
-  const url = computed(() => getImageV2(props.doc.files[selectedIndex.value].name.replace('/', '')));
+  function setSelected(docIndex: number, fileIndex: number) {
+    Object.assign(selectedIndex, { docIndex, fileIndex });
+  }
+
+  const url = computed(() => getImageV2(props.docs[selectedIndex.docIndex].files[selectedIndex.fileIndex].name.replace('/', '')));
 
   const maximized = ref(true);
 

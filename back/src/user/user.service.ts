@@ -49,4 +49,8 @@ export class UserService {
 
     return paginate<User>(query, res);
   }
+
+  async count(): Promise<number> {
+    return this.repository.count();
+  }
 }

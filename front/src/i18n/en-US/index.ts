@@ -4,6 +4,7 @@ import document from './document';
 import user from './user';
 import payment from './payment';
 import topic from './topic';
+import localDate from "./date";
 
 export default {
   paths,
@@ -12,6 +13,7 @@ export default {
   user,
   payment,
   topic,
+  localDate,
   next: 'Next',
   continue: 'Continue',
   previous: 'Previous',

@@ -53,8 +53,41 @@ export class PaymentService {
       else query.where('pay.created_at BETWEEN :from AND :to', { from, to })
     }
 
-    query.orderBy('pay.created_at', 'ASC');
+    query.orderBy('pay.created_at', 'DESC');
 
     return paginate<Payment>(query, res);
+  }
+
+  async monthlyRevenue() {
+    const year = new Date().getFullYear();
+    return this.repository
+      .createQueryBuilder('pay')
+      .select('SUM(pay.amount)', 'amount')
+      .addSelect('EXTRACT("MONTH" FROM pay.created_at)', 'month')
+      .where('EXTRACT("YEAR" FROM pay.created_at) = :year', { year })
+      .andWhere('pay.status = :status', { status: 'approved' })
+      .groupBy('month')
+      .getRawMany();
+  }
+
+  async statusStatistics() {
+    const year = new Date().getFullYear();
+    return this.repository
+      .createQueryBuilder('pay')
+      .select('COUNT(pay.id)', 'count')
+      .addSelect('pay.status', 'status')
+      .addSelect('SUM(pay.amount)', 'amount')
+      .where('EXTRACT("YEAR" FROM pay.created_at) = :year', { year })
+      .groupBy('pay.status')
+      .getRawMany();
+  }
+
+  async salesRevenue(): Promise<number> {
+    const query = await this.repository
+        .createQueryBuilder('pay')
+        .select('SUM(pay.amount)', 'amount')
+        .getRawOne();
+
+    return query?.amount || 0;
   }
 }

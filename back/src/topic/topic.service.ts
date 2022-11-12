@@ -32,12 +32,20 @@ export class TopicService {
     //filter only document I have access
     const query = this.repository
         .createQueryBuilder('topic')
-        .innerJoin('payments', 'pay', 'pay.user_id = :userId',{ userId })
-        .innerJoin('payment_documents', 'payDoc', 'pay.id = payDoc.payment_id')
-        .where('payDoc.document_id = topic.document_id')
-        .andWhere('pay.status = :status', { status: 'approved' })
+        .leftJoin('payments', 'pay', 'pay.user_id = :userId',{ userId })
+        .leftJoin('payment_documents', 'payDoc', 'pay.id = payDoc.payment_id')
+        .leftJoin('documents', 'doc', 'doc.id = topic.document_id')
+        .where(new Brackets(query => {
+          query.where('pay.status = :status AND doc.id = payDoc.document_id', { status: 'approved' })
+          query.orWhere('topic.user_id = :userId',{ userId })
+          query.orWhere('doc.user_id = :userId',{ userId })
+        }))
         .andWhere('topic.title ILIKE :keyword', { keyword })
         .orderBy(`topic.${from}`, to as any);
     return paginate<Topic>(query, res);
+  }
+
+  async count(): Promise<number> {
+    return this.repository.count();
   }
 }

@@ -38,7 +38,7 @@ export class Topic {
   @JoinColumn({ name: 'document_id' })
   document: Document;
   @RelationId((topic: Topic) => topic.document)
-  documentId: number;
+  documentId: string;
 
   @OneToMany(() => Message, (m) => m.topic)
   messages: Message[];

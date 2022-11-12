@@ -1,9 +1,9 @@
 <template>
   <q-page padding class="row q-col-gutter-md reverse-wrap">
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-9">
       <DocumentsList :families="families" />
     </div>
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <DocumentCreate :families="families" />
     </div>
   </q-page>

@@ -10,7 +10,7 @@
     <q-page-container class="bg-grey-3">
       <q-page padding>
 
-        <BuyDocument>
+        <BuyDocument :categories="categories">
           <CartAuthDialog :user="currentUser.id" :cart="cart.length" />
         </BuyDocument>
 
@@ -31,7 +31,7 @@
             <img :src="currentUser.avatar ? getImage(currentUser.avatar) : '/login.svg'">
           </q-avatar>
           <q-btn
-            :to="['/admin', '/my-space'][currentUser.role]"
+            :to="CONSTANTS.baseRoutes[currentUser.role]"
             color="positive"
             icon-right="arrow_forward"
             label="Espace personnel"
@@ -75,7 +75,7 @@
         :filter="filterCategories"
         control-color="grey-6"
         tick-strategy="leaf"
-        v-model:ticked="ticked"
+        v-model:ticked="categories"
       />
     </q-drawer>
   </HomeLayout>
@@ -84,7 +84,7 @@
 <script lang="ts" setup>
   import {ref} from 'vue';
   import {useFamilies} from 'src/graphql/family/families';
-  import {getImage, makeTree} from 'src/utils/utils';
+  import {CONSTANTS, getImage, makeTree} from 'src/utils/utils';
   import HomeLayout from 'layouts/HomeLayout.vue';
   import {useWHoAmI} from 'src/graphql/users/whoAmi';
   import { cart } from 'src/graphql/payment/cart';
@@ -99,7 +99,7 @@
 
   const { families, loading } = useFamilies();
 
-  const ticked = ref<string[]>([]);
+  const categories = ref<string[]>([]);
   const filterCategories = ref<string>('');
 
   const { currentUser } = useWHoAmI();

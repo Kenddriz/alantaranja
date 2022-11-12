@@ -5,7 +5,6 @@
       :name="`<strong class='text-capitalize text-${mes.messageId ? 'primary' : 'positive'}'>
           ${getName(mes.user)}
         </strong>`"
-      :avatar="getImageV2(mes.user.avatar)||'/add_files.svg'"
       :text="[mes.body]"
       text-html
       name-html
@@ -82,6 +81,14 @@
           </div>
         </q-card-actions>
       </template>
+      <template v-slot:avatar>
+        <router-link :to="mes.user.id === userId ? profileLink : '' ">
+          <img
+            class="q-message-avatar q-message-avatar--sent"
+            :src="getImage(mes.user.avatar)||'/add_files.svg'"
+          >
+        </router-link>
+      </template>
     </q-chat-message>
     <!--Responses-->
     <MyChat
@@ -96,7 +103,7 @@
 
 <script lang="ts" setup>
 import {Message, MessageReaction} from "src/graphql/types";
-import {CONSTANTS, getImageV2, getName} from "src/utils/utils";
+import {CONSTANTS, getImage, getName} from "src/utils/utils";
 
   withDefaults(defineProps<{
     messages: Message[],
@@ -122,6 +129,8 @@ function update(title: string, id:string) {
   }
 
   const userId = Number(localStorage.getItem(CONSTANTS.userId));
+
+  const profileLink = CONSTANTS.baseRoutes[Number(localStorage.getItem(CONSTANTS.role))] + '/profile';
 
 </script>
 

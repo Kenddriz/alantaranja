@@ -20,6 +20,7 @@ import { PaymentDocumentModule } from './payment-document/payment-document.modul
 import { TopicModule } from './topic/topic.module';
 import { MessageModule } from './message/message.module';
 import { ReactionModule } from './reaction/reaction.module';
+import {ServeStaticModule} from "@nestjs/serve-static";
 
 @Module({
   imports: [
@@ -51,6 +52,10 @@ import { ReactionModule } from './reaction/reaction.module';
     TopicModule,
     MessageModule,
     ReactionModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public/alantaranjaclient'),
+      exclude: ['/api*']
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

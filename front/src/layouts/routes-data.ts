@@ -76,6 +76,11 @@ export const ROUTES_DATA = {
       icon: 'list',
       to: '/teacher/list'
     },
+    {
+      title: 'paths.category',
+      icon: 'category',
+      to: '/teacher/categories'
+    },
     { separator: true },
     {
       title: 'paths.teacherProfile',

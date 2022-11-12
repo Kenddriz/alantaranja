@@ -12,22 +12,42 @@
     :columns="columns"
     :filter="input.keyword"
     separator="cell"
-    row-key="name"
+    row-key="id"
     flat>
+    <template v-slot:body-cell-status="props">
+      <q-td
+        :class="`text-${statusColor[props.value]}`"
+        auto-width
+        :props="props">
+          {{ $t(`payment.${props.value}`) }}
+      </q-td>
+    </template>
     <template v-slot:body-cell-actions="props">
       <q-td auto-width :props="props">
-        <q-btn
-          flat
-          @click="download(props.row)"
-          dense
-          color="primary"
-          icon="file_download"
-          no-caps />
-        <q-btn
-          flat
-          color="primary"
-          icon="visibility"
-          no-caps />
+        <span v-if="!!props.row.downloadAt" class="text-primary">
+          {{ $t('payment.downloaded') }}
+        </span>
+        <span v-else-if="props.row.status === 'pending'">
+          {{ $t('payment.processed') }}
+        </span>
+        <span v-else-if="props.row.status === 'rejected'" class="text-red">
+          {{ $t('payment.pRejected') }}
+        </span>
+        <template v-else-if="props.row.status === 'approved'">
+          <q-btn
+            flat
+            @click="download(props.row)"
+            dense
+            color="primary"
+            icon="file_download"
+            no-caps />
+          <q-btn
+            @click="playDocument(props.row)"
+            flat
+            color="primary"
+            icon="visibility"
+            no-caps />
+        </template>
       </q-td>
     </template>
   </q-table>
@@ -114,8 +134,15 @@
     {
       name: 'status',
       align: 'center',
-      label: t('payment.status'),
-      field: (row: Payment) => t(`payment.${row.status}`),
+      label: t('payment.pStatus'),
+      field: 'status',
+      sortable: true
+    },
+    {
+      name: 'downloadAt',
+      align: 'center',
+      label: t('payment.downloadedAt'),
+      field: 'downloadAt',
       sortable: true
     },
     {
@@ -134,10 +161,24 @@
       componentProps: {
         files: payment.documents.reduce((cum: string[], cur) => {
           return cum.concat(cur.document.files.map(f => f.name));
-        }, [])
+        }, []),
+        paymentId: payment.id,
       },
     })
   }
+
+  function playDocument(payment: Payment) {
+    dialog({
+      component: defineAsyncComponent(() => import("components/document/DocumentDetails.vue")),
+      componentProps: { docs: payment.documents.map(d => d.document) },
+    })
+  }
+
+  const statusColor = {
+    pending: 'info',
+    approved: 'positive',
+    rejected: 'negative'
+  };
 </script>
 
 <style scoped>

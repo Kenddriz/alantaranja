@@ -1,6 +1,7 @@
 <template>
   <q-img
-    :src="urlList[0]||src||'/register.svg'"
+    :src="urlList[0]||(loadError ? '' : src)||'/register.svg'"
+    @error="loadError = true"
     spinner-color="amber">
     <div class="absolute-center bg-transparent">
       <q-btn
@@ -32,6 +33,7 @@
 
 <script lang="ts" setup>
   import {useImageLoader} from 'src/utils/preview';
+  import {ref} from "vue";
 
   const props = defineProps<{
     modelValue: File,
@@ -52,6 +54,7 @@
     urlList.value.length = 0;
     emits('update:modelValue', null);
   }
+  const loadError = ref(false);
 </script>
 
 <style scoped>

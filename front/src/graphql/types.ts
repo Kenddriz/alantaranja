@@ -26,6 +26,7 @@ export type Category = {
   children: Array<Category>;
   id: Scalars['String'];
   label: Scalars['String'];
+  userId?: Maybe<Scalars['Int']>;
 };
 
 export type CategoryCreateInput = {
@@ -62,6 +63,21 @@ export type DocumentCreateInput = {
   title: Scalars['String'];
 };
 
+export type DocumentDownloadInput = {
+  paymentId: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type DocumentUpdateInput = {
+  description: Scalars['String'];
+  familyId?: InputMaybe<Scalars['String']>;
+  hidden: Scalars['Boolean'];
+  id: Scalars['String'];
+  price: Scalars['Float'];
+  sizes: Array<Scalars['Float']>;
+  title: Scalars['String'];
+};
+
 export type DocumentsPagination = {
   __typename?: 'DocumentsPagination';
   items: Array<Document>;
@@ -69,7 +85,9 @@ export type DocumentsPagination = {
 };
 
 export type DocumentsPaginationInput = {
+  categories: Array<Scalars['String']>;
   from?: InputMaybe<Scalars['String']>;
+  hidden: Array<Scalars['Boolean']>;
   keyword?: InputMaybe<Scalars['String']>;
   limit: Scalars['Int'];
   page: Scalars['Int'];
@@ -152,6 +170,7 @@ export type Mutation = {
   categoryCreate: Family;
   documentCreate: Document;
   documentRemove: Scalars['String'];
+  documentUpdate: Document;
   familyRemove: Scalars['String'];
   familyUpdate: Family;
   login: LoginDto;
@@ -159,10 +178,12 @@ export type Mutation = {
   messageRemove: Scalars['Boolean'];
   messageUpdate: Scalars['Boolean'];
   paymentCreate: Payment;
+  paymentDownloaded: Payment;
   paymentStatus: Payment;
   reactMessage: Scalars['Boolean'];
   resetPassword: User;
   sendCode: Scalars['Boolean'];
+  setupDocument: Scalars['String'];
   subjectRemove: Scalars['String'];
   topicCreate: Topic;
   topicUpdate: Topic;
@@ -187,6 +208,12 @@ export type MutationDocumentCreateArgs = {
 
 export type MutationDocumentRemoveArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDocumentUpdateArgs = {
+  files: Array<Scalars['Upload']>;
+  input: DocumentUpdateInput;
 };
 
 
@@ -226,6 +253,11 @@ export type MutationPaymentCreateArgs = {
 };
 
 
+export type MutationPaymentDownloadedArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationPaymentStatusArgs = {
   input: PaymentStatusInput;
 };
@@ -243,6 +275,11 @@ export type MutationResetPasswordArgs = {
 
 export type MutationSendCodeArgs = {
   input: SendCodeInput;
+};
+
+
+export type MutationSetupDocumentArgs = {
+  input: DocumentDownloadInput;
 };
 
 
@@ -287,6 +324,14 @@ export type MutationUserVerifyEmailArgs = {
   input: UserVerifyEmailInput;
 };
 
+export type Overview = {
+  __typename?: 'Overview';
+  documents: Scalars['Int'];
+  revenue: Scalars['Float'];
+  topics: Scalars['Int'];
+  users: Scalars['Int'];
+};
+
 export type PaginationInput = {
   from?: InputMaybe<Scalars['String']>;
   keyword?: InputMaybe<Scalars['String']>;
@@ -297,9 +342,11 @@ export type PaginationInput = {
 
 export type Payment = {
   __typename?: 'Payment';
+  amount: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   documents: Array<PaymentDocument>;
   downloadAt?: Maybe<Scalars['DateTime']>;
+  expiredAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
   link?: Maybe<Scalars['String']>;
   note: Scalars['String'];
@@ -324,10 +371,23 @@ export type PaymentStatusInput = {
   status: Scalars['String'];
 };
 
+export type PaymentsMonthlyOutput = {
+  __typename?: 'PaymentsMonthlyOutput';
+  amount: Scalars['Float'];
+  month: Scalars['Int'];
+};
+
 export type PaymentsPagination = {
   __typename?: 'PaymentsPagination';
   items: Array<Payment>;
   meta: Meta;
+};
+
+export type PaymentsStatusStatisticsOutput = {
+  __typename?: 'PaymentsStatusStatisticsOutput';
+  amount: Scalars['Float'];
+  count: Scalars['Int'];
+  status: Scalars['String'];
 };
 
 export type Query = {
@@ -336,9 +396,11 @@ export type Query = {
   documentsPaginate: DocumentsPagination;
   documentsSearch: Array<Document>;
   families: Array<Family>;
-  findOne: Scalars['String'];
   myPaymentsPaginate: PaymentsPagination;
+  overviews: Overview;
+  paymentsMonthly: Array<PaymentsMonthlyOutput>;
   paymentsPaginate: PaymentsPagination;
+  paymentsStatusStatistics: Array<PaymentsStatusStatisticsOutput>;
   topicGet?: Maybe<Topic>;
   topicMessages: Array<Message>;
   topicsPaginate: TopicsPagination;
@@ -409,6 +471,7 @@ export type Topic = {
   __typename?: 'Topic';
   body: Scalars['String'];
   createdAt: Scalars['DateTime'];
+  document?: Maybe<Document>;
   id: Scalars['String'];
   statistics: Array<Scalars['Int']>;
   title: Scalars['String'];
@@ -562,6 +625,8 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Document: ResolverTypeWrapper<Document>;
   DocumentCreateInput: DocumentCreateInput;
+  DocumentDownloadInput: DocumentDownloadInput;
+  DocumentUpdateInput: DocumentUpdateInput;
   DocumentsPagination: ResolverTypeWrapper<DocumentsPagination>;
   DocumentsPaginationInput: DocumentsPaginationInput;
   Family: ResolverTypeWrapper<Family>;
@@ -577,12 +642,15 @@ export type ResolversTypes = {
   MessageUpdateInput: MessageUpdateInput;
   Meta: ResolverTypeWrapper<Meta>;
   Mutation: ResolverTypeWrapper<{}>;
+  Overview: ResolverTypeWrapper<Overview>;
   PaginationInput: PaginationInput;
   Payment: ResolverTypeWrapper<Payment>;
   PaymentCartInput: PaymentCartInput;
   PaymentDocument: ResolverTypeWrapper<PaymentDocument>;
   PaymentStatusInput: PaymentStatusInput;
+  PaymentsMonthlyOutput: ResolverTypeWrapper<PaymentsMonthlyOutput>;
   PaymentsPagination: ResolverTypeWrapper<PaymentsPagination>;
+  PaymentsStatusStatisticsOutput: ResolverTypeWrapper<PaymentsStatusStatisticsOutput>;
   Query: ResolverTypeWrapper<{}>;
   ResetPasswordInput: ResetPasswordInput;
   SearchDocumentsInput: SearchDocumentsInput;
@@ -612,6 +680,8 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   Document: Document;
   DocumentCreateInput: DocumentCreateInput;
+  DocumentDownloadInput: DocumentDownloadInput;
+  DocumentUpdateInput: DocumentUpdateInput;
   DocumentsPagination: DocumentsPagination;
   DocumentsPaginationInput: DocumentsPaginationInput;
   Family: Family;
@@ -627,12 +697,15 @@ export type ResolversParentTypes = {
   MessageUpdateInput: MessageUpdateInput;
   Meta: Meta;
   Mutation: {};
+  Overview: Overview;
   PaginationInput: PaginationInput;
   Payment: Payment;
   PaymentCartInput: PaymentCartInput;
   PaymentDocument: PaymentDocument;
   PaymentStatusInput: PaymentStatusInput;
+  PaymentsMonthlyOutput: PaymentsMonthlyOutput;
   PaymentsPagination: PaymentsPagination;
+  PaymentsStatusStatisticsOutput: PaymentsStatusStatisticsOutput;
   Query: {};
   ResetPasswordInput: ResetPasswordInput;
   SearchDocumentsInput: SearchDocumentsInput;
@@ -656,6 +729,7 @@ export type CategoryResolvers<ContextType = any, ParentType extends ResolversPar
   children?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -734,6 +808,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   categoryCreate?: Resolver<ResolversTypes['Family'], ParentType, ContextType, RequireFields<MutationCategoryCreateArgs, 'input'>>;
   documentCreate?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDocumentCreateArgs, 'files' | 'input'>>;
   documentRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDocumentRemoveArgs, 'id'>>;
+  documentUpdate?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDocumentUpdateArgs, 'files' | 'input'>>;
   familyRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationFamilyRemoveArgs, 'id'>>;
   familyUpdate?: Resolver<ResolversTypes['Family'], ParentType, ContextType, RequireFields<MutationFamilyUpdateArgs, 'input'>>;
   login?: Resolver<ResolversTypes['LoginDto'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
@@ -741,10 +816,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   messageRemove?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMessageRemoveArgs, 'id'>>;
   messageUpdate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMessageUpdateArgs, 'input'>>;
   paymentCreate?: Resolver<ResolversTypes['Payment'], ParentType, ContextType, RequireFields<MutationPaymentCreateArgs, 'input' | 'proof'>>;
+  paymentDownloaded?: Resolver<ResolversTypes['Payment'], ParentType, ContextType, RequireFields<MutationPaymentDownloadedArgs, 'id'>>;
   paymentStatus?: Resolver<ResolversTypes['Payment'], ParentType, ContextType, RequireFields<MutationPaymentStatusArgs, 'input'>>;
   reactMessage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationReactMessageArgs, 'input'>>;
   resetPassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'input'>>;
   sendCode?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendCodeArgs, 'input'>>;
+  setupDocument?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSetupDocumentArgs, 'input'>>;
   subjectRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSubjectRemoveArgs, 'id'>>;
   topicCreate?: Resolver<ResolversTypes['Topic'], ParentType, ContextType, RequireFields<MutationTopicCreateArgs, 'input'>>;
   topicUpdate?: Resolver<ResolversTypes['Topic'], ParentType, ContextType, RequireFields<MutationTopicUpdateArgs, 'input'>>;
@@ -755,10 +832,20 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   userVerifyEmail?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUserVerifyEmailArgs, 'input'>>;
 };
 
+export type OverviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Overview'] = ResolversParentTypes['Overview']> = {
+  documents?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  revenue?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  topics?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  users?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PaymentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Payment'] = ResolversParentTypes['Payment']> = {
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   documents?: Resolver<Array<ResolversTypes['PaymentDocument']>, ParentType, ContextType>;
   downloadAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  expiredAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   link?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   note?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -774,9 +861,22 @@ export type PaymentDocumentResolvers<ContextType = any, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PaymentsMonthlyOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaymentsMonthlyOutput'] = ResolversParentTypes['PaymentsMonthlyOutput']> = {
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  month?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PaymentsPaginationResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaymentsPagination'] = ResolversParentTypes['PaymentsPagination']> = {
   items?: Resolver<Array<ResolversTypes['Payment']>, ParentType, ContextType>;
   meta?: Resolver<ResolversTypes['Meta'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PaymentsStatusStatisticsOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaymentsStatusStatisticsOutput'] = ResolversParentTypes['PaymentsStatusStatisticsOutput']> = {
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -785,9 +885,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   documentsPaginate?: Resolver<ResolversTypes['DocumentsPagination'], ParentType, ContextType, RequireFields<QueryDocumentsPaginateArgs, 'input'>>;
   documentsSearch?: Resolver<Array<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryDocumentsSearchArgs, 'input'>>;
   families?: Resolver<Array<ResolversTypes['Family']>, ParentType, ContextType>;
-  findOne?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   myPaymentsPaginate?: Resolver<ResolversTypes['PaymentsPagination'], ParentType, ContextType, RequireFields<QueryMyPaymentsPaginateArgs, 'input'>>;
+  overviews?: Resolver<ResolversTypes['Overview'], ParentType, ContextType>;
+  paymentsMonthly?: Resolver<Array<ResolversTypes['PaymentsMonthlyOutput']>, ParentType, ContextType>;
   paymentsPaginate?: Resolver<ResolversTypes['PaymentsPagination'], ParentType, ContextType, RequireFields<QueryPaymentsPaginateArgs, 'input'>>;
+  paymentsStatusStatistics?: Resolver<Array<ResolversTypes['PaymentsStatusStatisticsOutput']>, ParentType, ContextType>;
   topicGet?: Resolver<Maybe<ResolversTypes['Topic']>, ParentType, ContextType, RequireFields<QueryTopicGetArgs, 'id'>>;
   topicMessages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryTopicMessagesArgs, 'topicId'>>;
   topicsPaginate?: Resolver<ResolversTypes['TopicsPagination'], ParentType, ContextType, RequireFields<QueryTopicsPaginateArgs, 'input'>>;
@@ -802,6 +904,7 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 export type TopicResolvers<ContextType = any, ParentType extends ResolversParentTypes['Topic'] = ResolversParentTypes['Topic']> = {
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   statistics?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -855,9 +958,12 @@ export type Resolvers<ContextType = any> = {
   MessageReaction?: MessageReactionResolvers<ContextType>;
   Meta?: MetaResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Overview?: OverviewResolvers<ContextType>;
   Payment?: PaymentResolvers<ContextType>;
   PaymentDocument?: PaymentDocumentResolvers<ContextType>;
+  PaymentsMonthlyOutput?: PaymentsMonthlyOutputResolvers<ContextType>;
   PaymentsPagination?: PaymentsPaginationResolvers<ContextType>;
+  PaymentsStatusStatisticsOutput?: PaymentsStatusStatisticsOutputResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   Topic?: TopicResolvers<ContextType>;

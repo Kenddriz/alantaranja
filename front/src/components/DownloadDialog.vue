@@ -43,10 +43,14 @@
 
 <script lang="ts" setup>
   import {useDialogPluginComponent} from "quasar";
-  import {reactive} from "vue";
+  import {reactive, ref} from "vue";
   import {movable} from "src/utils/utils";
+  import {gql} from "@apollo/client/core";
+  import {useMutation} from "@vue/apollo-composable";
+  import {MutationSetupDocumentArgs} from "src/graphql/types";
+  import {usePaymentDownloaded} from "src/graphql/payment/payment-downloaded";
 
-  const { dialogRef } = useDialogPluginComponent();
+  const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
   const { currentPos, move } = movable();
 
@@ -57,9 +61,18 @@
     remainTime: string;
     rate: string;
   }
-  const props = defineProps<{ files: string[] }>();
+  const props = defineProps<{
+    files: string[],
+    paymentId: string;
+  }>();
+
+  const { onDone, submitDownloaded } = usePaymentDownloaded();
+
+  onDone(() => onDialogHide());
 
   const rows = reactive<Row[]>([]);
+
+  const downloadStatus = ref<boolean[]>(Array(props.files.length).fill(false));
 
 //document.body.appendChild(link);
   function download(file: string, index: number) {
@@ -94,20 +107,44 @@
       rows[index].rate = Math.floor(bps / 1024) + 'KB / s';
       const status = (e.loaded / e.total) * 100;
       rows[index].status = status < 100 ? status.toFixed(2) : status;
+
+      if(status >= 100) {
+        downloadStatus.value[index] = true;
+        //when all finished
+        if(!downloadStatus.value.find(status => !status)) {
+          submitDownloaded(props.paymentId);
+        }
+      }
     };
   }
+
+  type Data = {
+    setupDocument: string;
+  }
+
+  const MUTATION = gql`
+    mutation SetupDocument($input: DocumentDownloadInput!) {
+        setupDocument(input: $input)
+    }
+   `;
+
+  const { loading, mutate } = useMutation<Data, MutationSetupDocumentArgs>(MUTATION);
 
   props.files.forEach((filename, index) => {
     const name = filename.split('/');
     rows.push({
-      filename: name[name.length - 1].substr(-15),
-      size: 0, status: '',
+      filename: name[name.length - 1].slice(-15),
+      size: 0,
+      status: '',
       remainTime: '',
       rate: ''
     });
-    download(filename, index);
+    mutate({ input: { url: filename, paymentId: props.paymentId } }).then(({ data }) => {
+      if(data?.setupDocument) {
+        download(data?.setupDocument, index);
+      }
+    })
   });
-
 </script>
 
 <style scoped>

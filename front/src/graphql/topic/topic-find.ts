@@ -2,7 +2,7 @@ import {Message, QueryTopicGetArgs, Topic} from "src/graphql/types";
 import {gql} from "@apollo/client/core";
 import {SUBJECT_FIELDS} from "src/graphql/topic/topic";
 import {useRouter} from "vue-router";
-import {useQuery} from "@vue/apollo-composable";
+import {useLazyQuery, useQuery} from "@vue/apollo-composable";
 import {computed, ref, watch} from "vue";
 import {defaultTopic, MESSAGE_FIELDS} from "src/graphql/topic/message";
 
@@ -16,7 +16,16 @@ export const TOPIC_QUERY = gql`
     topicGet(id: $id) {
       ${SUBJECT_FIELDS}
       body
-      user{id lastName firstName avatar}
+      user{
+        id
+        lastName
+        firstName
+        avatar
+      }
+      document {
+        id
+        title
+      }
     }
     topicMessages(topicId: $id) {
       ${MESSAGE_FIELDS}
@@ -37,14 +46,14 @@ export const useTopicFind = () => {
   const { currentRoute } = useRouter();
 
   const topicId = ref<string>(String(currentRoute.value.params['id']));
-  const { loading, result, refetch } = useQuery<TopicData, QueryTopicGetArgs>(TOPIC_QUERY, {
-    id: topicId.value,
-  });
+  const { loading, result, load } = useLazyQuery<TopicData, QueryTopicGetArgs>(TOPIC_QUERY);
 
   watch(() => currentRoute.value, val => {
     topicId.value = String(val.params['id']);
-    refetch({ id: topicId.value });
-  });
+    if(topicId.value) {
+      load(TOPIC_QUERY, { id: topicId.value });
+    }
+  }, { immediate: true });
 
   const topic = computed(() => {
 

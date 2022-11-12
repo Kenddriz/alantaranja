@@ -5,6 +5,7 @@ export default {
   note: 'Note',
   notePlaceholder: 'Enter your note here ...',
   status: 'Status',
+  pStatus: 'Payment status',
   pending: 'Pending',
   approved: 'Approved',
   approvedConfirmation: 'Are you sur to approve this payment ?',
@@ -20,5 +21,11 @@ export default {
   documentCount: 'Document count',
   paymentSuccess: '<p>Your request was sent successfully.</p> ' +
     '<div>We will treat it as soon as possible.</div>' +
-    '<div>Please, wait until your request get approved to get download link.</div>'
+    '<div>Please, wait until your request get approved to get download link.</div>',
+  salesRevenue: 'Sales revenue',
+  monthly: 'Monthly revenue {year}',
+  processed: 'Being processed',
+  pRejected: 'Payment rejected',
+  downloadedAt: 'Download date',
+  downloaded: 'Already downloaded',
 }

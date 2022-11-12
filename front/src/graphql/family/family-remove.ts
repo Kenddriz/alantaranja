@@ -58,6 +58,7 @@ type Data = {
       Dialog.create({
         title: t('removeTitle'),
         message: t('category.removeConfirmation'),
+        cancel: t('no'),
         ok: t('yes'),
       }).onOk(() => {
         idToRemove.value = id;

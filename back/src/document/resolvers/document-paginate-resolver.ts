@@ -17,6 +17,12 @@ export class DocumentsPagination {
 export class DocumentsPaginationInput extends PaginationInput{
     @Field({ nullable: true })
     userId?: number;
+
+    @Field(() => [Boolean])
+    hidden: boolean[];
+
+    @Field(() => [String])
+    categories: string[];
 }
 
 @Resolver(() => Document)

@@ -2,7 +2,6 @@ import {
   DocumentsPagination,
   QueryDocumentsPaginateArgs,
   Document,
-  PaginationInput,
   DocumentsPaginationInput
 } from 'src/graphql/types';
 import {gql} from '@apollo/client';
@@ -36,7 +35,7 @@ export const useDocumentsPaginate = () => {
     {
       name: 'createdAt',
       label: t('date'),
-      align: 'left',
+      align: 'center',
       field: 'createdAt',
       sortable: true
     },
@@ -93,7 +92,8 @@ export const useDocumentsPaginate = () => {
     },
     {
       name: 'action',
-      label: 'Action',
+      align: 'center',
+      label: t('actions'),
     },
   ];
 
@@ -103,6 +103,8 @@ export const useDocumentsPaginate = () => {
     from: '',
     keyword: '',
     to: '',
+    hidden: [true, false],
+    categories: [],
     userId: path.includes('teacher') ? Number(localStorage.getItem(CONSTANTS.userId)) : null,
   });
   const { loading, result } = useQuery<Data, QueryDocumentsPaginateArgs>(QUERY, { input });

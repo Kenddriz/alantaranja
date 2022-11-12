@@ -94,6 +94,11 @@ const routes: RouteRecordRaw[] = [
         path: 'payments',
         name: 'payment',
         component: () => import('pages/admin/AdminPayments.vue'),
+      },
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('pages/admin/AdminDashboard.vue'),
       }
     ],
   },
@@ -117,6 +122,11 @@ const routes: RouteRecordRaw[] = [
         name: 'paymentList',
         component: () => import('pages/my-space/PaymentsList.vue')
       },
+      {
+        path: 'profile',
+        name: 'userProfile',
+        component: () => import('pages/ProfilePage.vue'),
+      },
     ],
   },
   {
@@ -138,6 +148,11 @@ const routes: RouteRecordRaw[] = [
         path: 'profile',
         name: 'teacherProfile',
         component: () => import('pages/ProfilePage.vue'),
+      },
+      {
+        path: 'categories',
+        name: 'teacherCategory',
+        component: () => import('components/category/CategoryComponent.vue'),
       },
     ],
   },

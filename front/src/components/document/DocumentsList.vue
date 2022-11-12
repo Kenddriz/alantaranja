@@ -18,7 +18,7 @@
         control-color="grey-6"
         node-key="key"
         tick-strategy="leaf"
-        v-model:ticked="ticked"
+        v-model:ticked="input.categories"
         default-expand-all
       />
     </CategoryDialog>
@@ -34,13 +34,23 @@
     flat>
     <template v-slot:top-right>
       <q-checkbox
-        :model-value="false"
+        v-model="hiddenOnly"
+        :model-value="hiddenOnly"
+        @update:model-value="onCheckHidden"
         :label="$t('document.hidden')" />
     </template>
     <template v-slot:body-cell-action="props">
       <q-td class="text-right" :props="props">
         <q-btn
-          dense
+          size="sm"
+          color="primary"
+          flat
+          round
+          icon="post_add" />
+
+        <q-btn
+          @click="updateDocument(props.row)"
+          size="sm"
           color="primary"
           flat
           round
@@ -48,7 +58,7 @@
 
         <q-btn
           @click="playDocument(props.row)"
-          dense
+          size="sm"
           color="primary"
           flat
           round
@@ -56,7 +66,7 @@
 
         <q-btn
           @click="remove(props.row.id)"
-          dense
+          size="sm"
           color="deep-orange"
           flat
           round
@@ -76,12 +86,11 @@
   import {useQuasar} from "quasar";
   import {useDocumentRemove} from "src/graphql/document/document-remove";
 
-  defineProps<{
+  const props = defineProps<{
     families: Family[],
   }>();
 
   const categoryDialog = ref(false);
-  const ticked = ref([]);
   const filter = ref('');
 
   const {
@@ -96,11 +105,24 @@
   function playDocument(doc: Document) {
     dialog({
       component: defineAsyncComponent(() => import("components/document/DocumentDetails.vue")),
-      componentProps: { doc },
+      componentProps: { docs: [doc] },
+    })
+  }
+
+  function updateDocument(doc: Document) {
+    dialog({
+      component: defineAsyncComponent(() => import("components/document/DocumentUpdate.vue")),
+      componentProps: { doc, families: props.families },
     })
   }
 
   const { remove, loadingRemove } = useDocumentRemove();
+
+  const hiddenOnly = ref(false);
+
+  function onCheckHidden(check: boolean) {
+    input.hidden = check ? [true] : [true, false];
+  }
 </script>
 
 <style scoped>
