@@ -72,4 +72,5 @@ export default {
   create: 'Create',
   free: 'Free',
   add: 'Add',
+  never: 'Never',
 }

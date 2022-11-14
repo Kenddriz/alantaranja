@@ -80,6 +80,7 @@ export class TopicGetResolver {
         @CurrentUser()strategy: StrategyType,
     ): Promise<Topic> {
         const topic = await this.topicService.findOne(id);
+        if(!topic) return topic;
         if(topic.userId !== strategy.id) {
             this.messageService.findView(strategy.id, id)
                 .then(mes => {

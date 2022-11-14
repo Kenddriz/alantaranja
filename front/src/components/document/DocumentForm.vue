@@ -1,6 +1,10 @@
 <template>
   <q-card style="width: 500px; max-width: 90vw" flat>
-    <q-form @submit.prevent="$emit('submit')">
+    <q-form
+      autocorrect="off"
+      autocomplete="off"
+      spellcheck="false"
+      @submit.prevent="$emit('submit')">
       <q-card-section class="q-gutter-y-md">
         <slot name="title"></slot>
 

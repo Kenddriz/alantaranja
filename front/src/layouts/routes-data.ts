@@ -81,7 +81,7 @@ export const ROUTES_DATA = {
   teacher: [
     { title: 'paths.teacherDocument' },
     {
-      title: 'list',
+      title: 'document.all',
       icon: 'list',
       to: '/teacher/list'
     },

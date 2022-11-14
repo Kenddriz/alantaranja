@@ -14,6 +14,7 @@ import {CONSTANTS, getExt} from 'src/utils/utils';
 import {useRoute} from "vue-router";
 import {date} from "quasar";
 import formatDate = date.formatDate;
+import {formatFilesSize} from "src/utils/file";
 
 type Data = {
   documentsPaginate: DocumentsPagination;
@@ -67,7 +68,7 @@ export const useDocumentsPaginate = () => {
       name: 'sizes',
       align: 'center',
       label: t('document.size'),
-      field: (doc: Document) => doc.files.reduce((cum, cur) => cum + cur.size,0),
+      field: (doc: Document) => formatFilesSize(doc.files),
       sortable: true
     },
     {

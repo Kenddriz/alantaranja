@@ -104,7 +104,7 @@
       name: 'lastConnexion',
       label: t('user.lastConnexion'),
       align: 'lastConnexion',
-      field: 'lastConnexion',
+      field: (row: User) => row.lastConnexion ? formatDate(row.lastConnexion, t('localDate.long')) : t('never'),
       sortable: true
     },
     {

@@ -49,6 +49,7 @@
   import {useMutation} from "@vue/apollo-composable";
   import {MutationSetupDocumentArgs} from "src/graphql/types";
   import {usePaymentDownloaded} from "src/graphql/payment/payment-downloaded";
+  import {formatFilesSize} from "src/utils/file";
 
   const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
@@ -102,7 +103,7 @@
 
       const time = (e.total - e.loaded) / bps;
 
-      rows[index].size = e.total;
+      rows[index].size = formatFilesSize(e.total);
       rows[index].remainTime = Math.floor(time / 60) + ' min ' +  Math.floor(time % 60) + ' s ';
       rows[index].rate = Math.floor(bps / 1024) + 'KB / s';
       const status = (e.loaded / e.total) * 100;
