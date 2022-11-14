@@ -6,31 +6,45 @@ export const ROUTES_DATA = {
       icon: 'dashboard',
       to: '/admin/dashboard'
     },
-    {
-      title: 'paths.profile',
-      icon: 'person',
-      to: '/admin/profile'
-    },
-    {
-      title: 'paths.category',
-      icon: 'category',
-      to: '/admin/categories'
-    },
-    {
-      title: 'paths.document',
-      icon: 'bookmark',
-      to: '/admin/documents'
-    },
-    {
-      title: 'paths.user',
-      icon: 'group',
-      to: '/admin/users'
-    },
 
     {
       title: 'paths.payment',
       icon: 'payments',
       to: '/admin/payments'
+    },
+
+    { title: 'paths.user' },
+
+    {
+      title: 'user.all',
+      icon: 'group',
+      to: '/admin/users'
+    },
+
+    {
+      title: 'paths.profile',
+      icon: 'person',
+      to: '/admin/profile'
+    },
+
+    { title: 'paths.document' },
+
+    {
+      title: 'document.all',
+      icon: 'bookmark',
+      to: '/admin/documents'
+    },
+
+    {
+      title: 'paths.category',
+      icon: 'category',
+      to: '/admin/categories'
+    },
+
+    {
+      title: 'paths.forum',
+      icon: 'comment',
+      to: '/forum'
     },
   ],
 
@@ -66,11 +80,6 @@ export const ROUTES_DATA = {
   ],
   teacher: [
     { title: 'paths.teacherDocument' },
-    {
-      title: 'new',
-      to: '/teacher/document-create',
-      icon: 'add',
-    },
     {
       title: 'list',
       icon: 'list',

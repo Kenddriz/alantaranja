@@ -1,5 +1,7 @@
 <template>
   <q-select
+    lazy-rules="ondemand"
+    :rules="[v => v?.length || '']"
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     use-input
@@ -50,7 +52,7 @@
   const { loading, result, onResult } = useQuery<Data, QueryDocumentsSearchArgs>(QUERY, { input }, { fetchPolicy: 'no-cache' });
 
   onResult(({ data }) => {
-    options.value = data ? data?.usersSearch : [];
+    options.value = data ? data?.documentsSearch : [];
   });
 
   function filterFn (val: string, update: any) {
@@ -63,10 +65,10 @@
     else {
       update(() => {
         const needle = val.toLowerCase()
-        options.value = result.value?.usersSearch?.filter(v => v.name.toLowerCase().indexOf(needle) > -1);
+        options.value = result.value?.documentsSearch?.filter(v => v.title.toLowerCase().indexOf(needle) > -1);
       });
     }
-    if(!options.value?.length) input.name = val;
+    if(!options.value?.length) input.title = val;
   }
 
 </script>

@@ -9,7 +9,7 @@ export class TopicRemoveResolver {
     constructor(private subjectService: TopicService) {}
 
     @Mutation(() => String)
-    async subjectRemove(@Args('id')id: string,): Promise<String> {
+    async topicRemove(@Args('id')id: string,): Promise<String> {
         return new Promise((resolve) => {
             this.subjectService.remove(id).then(count => {
                 resolve(count ? id : '');

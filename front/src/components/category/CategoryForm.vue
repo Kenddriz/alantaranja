@@ -4,16 +4,18 @@
       <slot></slot>
       <div class="col-12" v-bind:class="{ 'col-md-3': !isUpdate }">
         <q-input
+          lazy-rules="ondemand"
+          :rules="[(v) => v?.length || '']"
           :model-value="label"
           @update:model-value="$emit('update:label', $event)"
           dense
-          label="Label"/>
+          :label="$t('category.label')"/>
       </div>
 
       <div class="col-12" v-bind:class="{ 'col-md-3': !isUpdate }">
         <q-select
           dense
-          label="Parent"
+          :label="$t('category.parent')"
           :model-value="parentId"
           @update:model-value="$emit('update:parentId', $event)"
           use-input

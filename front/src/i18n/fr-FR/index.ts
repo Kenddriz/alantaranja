@@ -58,4 +58,5 @@ export default {
   logout: 'Log out',
   new: 'New',
   list: 'List',
+  by: 'By',
 }

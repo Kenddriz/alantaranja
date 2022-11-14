@@ -11,7 +11,7 @@ export const useSession = () => {
     localStorage.setItem(CONSTANTS.token, token);
     localStorage.setItem(CONSTANTS.role, String(user.role));
     localStorage.setItem(CONSTANTS.userId, String(user.id));
-    void route.push(user.role ? '/' : '/admin');
+    void route.push(CONSTANTS.baseRoutes[user.role]);
   };
   const logout = () => {
     void route.push('/');

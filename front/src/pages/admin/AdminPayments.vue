@@ -1,54 +1,52 @@
 <template>
-  <q-page padding>
-    <CommonFilters
-      v-model:from="input.from"
-      v-model:limit="input.limit"
-      v-model:filter="input.keyword"
-      v-model:page="input.page"
-      v-model:to="input.to" />
-    <q-table
-      class="q-mt-md"
-      title="Payments list"
-      :rows="payment.items"
-      :columns="columns"
-      :loading="loading || statusLoading"
-      row-key="id"
-      flat>
-      <template v-slot:body-cell-proof="props">
-        <q-td :props="props">
-          <q-avatar
-            class="cursor-pointer"
-            @click="viewImag(props.row.proof)">
-            <q-img :src="props.value" />
-          </q-avatar>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-id="props">
-          <q-td :props="props">
-            <template v-if="props.row.status === 'pending'">
-              <q-btn
-                @click="submit(props.value, 'approved')"
-                flat
-                dense
-                color="primary"
-                icon="check" />
-              <q-btn
-                @click="submit(props.value, 'rejected')"
-                flat
-                dense
-                color="deep-orange"
-                icon="close" />
-            </template>
-            <q-btn
-              flat
-              @click="openDetails(props.row)"
-              dense
-              color="primary"
-              icon="more_vert" />
-          </q-td>
-      </template>
-    </q-table>
-  </q-page>
+  <CommonFilters
+    v-model:from="input.from"
+    v-model:limit="input.limit"
+    v-model:filter="input.keyword"
+    v-model:page="input.page"
+    v-model:to="input.to" />
+  <q-table
+    class="q-mt-md"
+    title="Payments list"
+    :rows="payment.items"
+    :columns="columns"
+    :loading="loading || statusLoading"
+    row-key="id"
+    flat>
+    <template v-slot:body-cell-proof="props">
+      <q-td :props="props">
+        <q-avatar
+          class="cursor-pointer"
+          @click="viewImag(props.row.proof)">
+          <q-img :src="props.value" />
+        </q-avatar>
+      </q-td>
+    </template>
+    <template v-slot:body-cell-id="props">
+      <q-td :props="props">
+        <template v-if="props.row.status === 'pending'">
+          <q-btn
+            @click="submit(props.value, 'approved')"
+            flat
+            dense
+            color="primary"
+            icon="check" />
+          <q-btn
+            @click="submit(props.value, 'rejected')"
+            flat
+            dense
+            color="deep-orange"
+            icon="close" />
+        </template>
+        <q-btn
+          flat
+          @click="openDetails(props.row)"
+          dense
+          color="primary"
+          icon="more_vert" />
+      </q-td>
+    </template>
+  </q-table>
 </template>
 
 <script lang="ts" setup>
@@ -66,9 +64,10 @@
   import {useI18n} from 'vue-i18n';
   import {useQuery} from '@vue/apollo-composable';
   import {USER_FIELDS} from 'src/graphql/users/user';
-  import {useQuasar} from 'quasar';
+  import {date, useQuasar} from 'quasar';
   import {getImage} from 'src/utils/utils';
   import {usePaymentStatus} from 'src/graphql/payment/payment-status';
+  import formatDate = date.formatDate;
 
   type Data = {
     paymentsPaginate: DocumentsPagination;
@@ -104,7 +103,7 @@
       name: 'createdAt',
       align: 'left',
       label: t('date'),
-      field: 'createdAt',
+      field: (row: Payment) => formatDate(row.createdAt, t('localDate.long')),
       sortable: true
     },
     {

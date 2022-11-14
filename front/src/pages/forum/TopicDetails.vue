@@ -16,6 +16,23 @@
               <mark class="q-px-md">«{{ topic.get.document.title }}»</mark>
             </div>
             <span v-html="topic.get.body" />
+
+            <template v-if="userId === topic.get.user.id" v-slot:action>
+              <q-btn
+                @click="updateTopic"
+                flat
+                dense
+                round
+                color="primary"
+                icon="edit" />
+              <q-btn
+                @click="removeTopic(topic.get.id)"
+                flat
+                dense
+                round
+                color="deep-orange"
+                icon="delete_forever" />
+            </template>
           </q-banner>
         </q-popup-proxy>
       </q-btn>
@@ -64,7 +81,7 @@
     </q-card-actions>
   </q-card>
 
-  <q-inner-loading :showing="loading || rLoading">
+  <q-inner-loading :showing="loading || rLoading || loadingTopicRemove">
     <q-spinner color="amber" size="10em" />
   </q-inner-loading>
 </template>
@@ -72,12 +89,14 @@
 <script lang="ts" setup>
   import { defineAsyncComponent } from "vue";
   import { useQuasar } from "quasar";
-  import { getImageV2, getName } from "src/utils/utils";
+  import {CONSTANTS, getImageV2, getName} from "src/utils/utils";
   import { useTopicFind } from "src/graphql/topic/topic-find";
   import MyChat from "components/topic/MyChat.vue";
   import {useMessageEvent} from "src/graphql/topic/message-event";
   import {useReactMessage} from "src/graphql/topic/react-message";
   import {useMessageRemove} from "src/graphql/topic/message-remove";
+  import TopicUpdate from "components/topic/TopicUpdate.vue";
+  import {useTopicRemove} from "src/graphql/topic/topic-remove";
 
   const { loading, topic, topicId, responses } = useTopicFind();
 
@@ -103,12 +122,26 @@
       }
     })
   }
+  function updateTopic() {
+    if(userId !== topic.value.get.user.id) return;
+    dialog({
+      component: defineAsyncComponent(() => import('components/topic/TopicUpdate.vue')),
+      componentProps: { topic: topic.value.get }
+    })
+  }
 
   //subscription
   useMessageEvent();
 
   const { react } = useReactMessage();
   const { loading:rLoading, remove } = useMessageRemove();
+
+  const userId = Number(localStorage.getItem(CONSTANTS.userId));
+
+  const {
+    loadingTopicRemove,
+    removeTopic
+  } = useTopicRemove();
 
 </script>
 

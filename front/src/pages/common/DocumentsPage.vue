@@ -25,13 +25,23 @@
   </CommonFilters>
   <q-table
     class="q-mt-md"
-    title="Documents List"
     :rows="doc.items"
     :columns="columns"
     :filter="filter"
     :loading="loading || loadingRemove"
     row-key="id"
     flat>
+    <template v-slot:top-left>
+      <q-btn
+        @click="createDocument"
+        dense
+        unelevated
+        color="primary"
+        no-caps
+        style="padding-left: 15px; padding-right: 15px"
+        :label="$t('document.new')"
+        icon="add" />
+    </template>
     <template v-slot:top-right>
       <q-checkbox
         v-model="hiddenOnly"
@@ -39,9 +49,11 @@
         @update:model-value="onCheckHidden"
         :label="$t('document.hidden')" />
     </template>
+
     <template v-slot:body-cell-action="props">
       <q-td class="text-right" :props="props">
         <q-btn
+          @click="addFilesDocument(props.row.id, props.row.title)"
           size="sm"
           color="primary"
           flat
@@ -80,15 +92,14 @@
   import {defineAsyncComponent, ref} from "vue";
   import {useDocumentsPaginate} from "src/graphql/document/documents-paginate";
   import {Family, Document} from "src/graphql/types";
-  import CommonFilters from "../CommonFilters.vue";
-  import CategoryDialog from "../CategoryDialog.vue";
+  import CommonFilters from "components/CommonFilters.vue";
+  import CategoryDialog from "components/CategoryDialog.vue";
   import {makeTree} from "src/utils/utils";
   import {useQuasar} from "quasar";
   import {useDocumentRemove} from "src/graphql/document/document-remove";
+  import {useFamilies} from "src/graphql/family/families";
 
-  const props = defineProps<{
-    families: Family[],
-  }>();
+  const { families } = useFamilies();
 
   const categoryDialog = ref(false);
   const filter = ref('');
@@ -112,7 +123,21 @@
   function updateDocument(doc: Document) {
     dialog({
       component: defineAsyncComponent(() => import("components/document/DocumentUpdate.vue")),
-      componentProps: { doc, families: props.families },
+      componentProps: { doc, families: families.value },
+    })
+  }
+
+  function createDocument() {
+    dialog({
+      component: defineAsyncComponent(() => import("components/document/DocumentCreate.vue")),
+      componentProps: { families: families.value },
+    })
+  }
+
+  function addFilesDocument(id: string, title: string) {
+    dialog({
+      component: defineAsyncComponent(() => import("components/document/DocumentAddFiles.vue")),
+      componentProps: { id, title },
     })
   }
 

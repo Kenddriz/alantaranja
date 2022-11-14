@@ -3,7 +3,7 @@
 
     <q-header class="bg-white text-dark">
       <q-toolbar>
-        <q-avatar color="grey">
+        <q-avatar color="primary">
           <q-btn
             to="/"
             color="white"

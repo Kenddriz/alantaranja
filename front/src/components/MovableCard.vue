@@ -1,5 +1,5 @@
 <template>
-  <q-card :style="`width: 800px; max-width: 95vw;${currentPos}`">
+  <q-card :style="`${mStyle};${currentPos}`">
     <q-card-actions
       v-touch-pan.prevent.mouse="move"
       align="between"
@@ -19,6 +19,10 @@
 
 <script lang="ts" setup>
   import {movable} from 'src/utils/utils';
+
+  withDefaults(defineProps<{
+    mStyle?: string,
+  }>(), { mStyle: 'width: 800px; max-width: 95vw' });
 
   const { currentPos, move } = movable();
 </script>

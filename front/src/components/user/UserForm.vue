@@ -1,5 +1,5 @@
 <template>
-  <q-card flat>
+  <q-card :style="`${ withStyle ? 'width: 500px; max-width: 90vw' : ''}`" flat>
     <q-form @submit.prevent="$emit('submit')">
       <q-card-section class="q-gutter-y-md">
         <slot name="title"></slot>
@@ -78,7 +78,8 @@ import {CONSTANTS, REGEXP} from 'src/utils/utils';
     phone: string,
     role?: number,
     src?: string;
-  }>(), { email: undefined, role: undefined });
+    withStyle?: boolean
+  }>(), { email: undefined, role: undefined, withStyle: true });
 
   const emits = defineEmits([
     'update:phone',

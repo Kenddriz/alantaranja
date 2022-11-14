@@ -1,48 +1,53 @@
 <template>
-  <DocumentForm
-    @submit="submit"
-    v-model:title="input.title"
-    v-model:description="input.description"
-    v-model:price="input.price"
-    v-model:hidden="input.hidden"
-    v-model:familyId="input.familyId"
-    :families="families"
-    v-model:files="files">
-    <template v-slot:title>
-      <q-card-section class="q-py-none flex items-center justify-between">
-        New document
-        <q-icon class="q-ml-md" size="sm" name="file_present" />
-      </q-card-section>
-    </template>
-    <q-card-actions
-      :align="right ? 'right': ''"
-      class="q-px-md q-pb-md">
-      <q-btn
-        type="submit"
-        rounded
-        :class="right ? '' : 'full-width'"
-        :loading="loading"
-        label="Upload"
-        unelevated
-        color="primary"
-        icon="upload_file" />
-    </q-card-actions>
+  <q-dialog ref="dialogRef">
+    <DocumentForm
+      @submit="submit"
+      v-model:title="input.title"
+      v-model:description="input.description"
+      v-model:price="input.price"
+      v-model:hidden="input.hidden"
+      v-model:familyId="input.familyId"
+      :families="families"
+      v-model:files="files">
+      <template v-slot:title>
+        <q-card-section class="q-py-none flex items-center justify-between">
+          {{ $t('document.new') }}
+          <q-icon class="q-ml-md" size="sm" name="file_present" />
+        </q-card-section>
+      </template>
+      <q-card-section class="flex justify-end q-gutter-x-md q-pt-none">
+        <q-btn
+          v-close-popup
+          :label="$t('close')"
+          icon="close"
+          unelevated
+          color="deep-orange" />
 
-    <q-inner-loading :showing="loading">
-      <q-circular-progress
-        show-value
-        class="q-ma-md text-white"
-        center-color="primary"
-        size="10em"
-        color="orange"
-        font-size="12px"
-        :value="progress"
-        track-color="grey-3"
-      >
-        {{ progress }}%
-      </q-circular-progress>
-    </q-inner-loading>
-  </DocumentForm>
+        <q-btn
+          type="submit"
+          :loading="loading"
+          label="Upload"
+          unelevated
+          color="primary"
+          icon="upload_file" />
+      </q-card-section>
+
+      <q-inner-loading :showing="loading">
+        <q-circular-progress
+          show-value
+          class="q-ma-md text-white"
+          center-color="primary"
+          size="10em"
+          color="orange"
+          font-size="12px"
+          :value="progress"
+          track-color="grey-3"
+        >
+          {{ progress }}%
+        </q-circular-progress>
+      </q-inner-loading>
+    </DocumentForm>
+  </q-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -54,12 +59,11 @@
   import {useMutation} from '@vue/apollo-composable';
   import {addPaginationCache} from 'src/utils/pagination';
   import {useI18n} from 'vue-i18n';
-  import {useQuasar} from 'quasar';
+  import {useDialogPluginComponent, useQuasar} from 'quasar';
 
-  withDefaults(defineProps<{
-    right?: boolean,
-    families: Family[]
-  }>(), { right: false });
+  const { dialogRef, onDialogHide } = useDialogPluginComponent();
+
+  defineProps<{ families: Family[] }>();
 
   const { t } = useI18n();
 
@@ -128,6 +132,7 @@
       progress.value = 0;
       Object.assign(input, defaultInput);
       files.value.length = 0;
+      onDialogHide();
     } else {
       notify({
         color: 'negative',

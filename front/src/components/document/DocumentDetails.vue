@@ -49,7 +49,6 @@
       <q-separator />
 
       <q-card-actions align="right">
-        <!--<q-btn flat :label="$t('download')" color="primary" v-close-popup />-->
         <q-btn
           flat
           :label="$t('close')"
@@ -82,7 +81,7 @@
     Object.assign(selectedIndex, { docIndex, fileIndex });
   }
 
-  const url = computed(() => getImageV2(props.docs[selectedIndex.docIndex].files[selectedIndex.fileIndex].name.replace('/', '')));
+  const url = computed(() => getImageV2(props.docs[selectedIndex.docIndex]?.files[selectedIndex.fileIndex]?.name?.replace('/', '')));
 
   const maximized = ref(true);
 

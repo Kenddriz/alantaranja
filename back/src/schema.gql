@@ -54,6 +54,7 @@ type Document {
   createdAt: DateTime!
   updatedAt: DateTime!
   family: Family
+  user: User!
 }
 
 type MessageReaction {
@@ -76,6 +77,8 @@ type Topic {
   id: String!
   title: String!
   body: String!
+  userId: Int!
+  documentId: String!
   createdAt: DateTime!
   statistics: [Int!]!
   user: User
@@ -207,6 +210,7 @@ type Mutation {
   documentUpdate(input: DocumentUpdateInput!, files: [Upload!]!): Document!
   documentRemove(id: String!): String!
   setupDocument(input: DocumentDownloadInput!): String!
+  documentAddFiles(input: DocumentAddFilesInput!, files: [Upload!]!): Document!
   paymentCreate(input: CreatePaymentInput!, proof: Upload!): Payment!
   paymentDownloaded(id: String!): Payment!
   paymentStatus(input: PaymentStatusInput!): Payment!
@@ -217,7 +221,7 @@ type Mutation {
   reactMessage(input: MessageReactionInput!): Boolean!
   messageUpdate(input: MessageUpdateInput!): Boolean!
   messageRemove(id: String!): Boolean!
-  subjectRemove(id: String!): String!
+  topicRemove(id: String!): String!
 }
 
 input UserCreateInput {
@@ -300,6 +304,11 @@ input DocumentUpdateInput {
 input DocumentDownloadInput {
   url: String!
   paymentId: String!
+}
+
+input DocumentAddFilesInput {
+  id: String!
+  sizes: [Float!]!
 }
 
 input CreatePaymentInput {

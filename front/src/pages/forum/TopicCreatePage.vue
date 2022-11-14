@@ -1,11 +1,17 @@
 <template>
-  <q-form @submit.prevent="submit">
+  <q-form
+    autocorrect="off"
+    autocomplete="off"
+    spellcheck="false"
+    @submit.prevent="submit">
     <q-card flat>
       <q-card-section class="text-h6">
         {{ $t('paths.createTopic') }}
       </q-card-section>
       <q-card-section class="q-gutter-y-md">
         <q-input
+          lazy-rules="ondemand"
+          :rules="[v => v?.length || '']"
           v-model="input.title"
           :label="$t('topic.title')">
           <template v-slot:prepend>
@@ -98,6 +104,9 @@
         color: 'positive',
         message: t('creationSuccess')
       });
+      input.title = '';
+      input.body = '';
+      input.documentId = '';
     } else {
       notify({
         color: 'negative',
@@ -107,6 +116,13 @@
   });
 
   function submit() {
+    if(!input.body) {
+      notify({
+        color: 'negative',
+        message: t('topic.missingBody')
+      });
+      return ;
+    }
     void mutate({ input });
   }
 </script>

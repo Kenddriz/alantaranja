@@ -31,12 +31,14 @@ export class Topic {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
+  @Field(() => Int)
   @RelationId((topic: Topic) => topic.user)
   userId: number;
 
   @ManyToOne(() => Document, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'document_id' })
   document: Document;
+  @Field(() => String)
   @RelationId((topic: Topic) => topic.document)
   documentId: string;
 

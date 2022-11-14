@@ -12,6 +12,7 @@
       </div>
       <div class="col-12 col-md-7">
         <UserForm
+          :withStyle="false"
           :src="src"
           @submit="updateUser()"
           v-model:lastName="input.lastName"

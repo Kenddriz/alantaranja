@@ -43,5 +43,8 @@ export default {
   currentPassword: 'Current password',
   resetPassword: 'Reset password',
   passwordUpdate: 'Update password',
-  updateInfos: 'Generale infos'
+  updateInfos: 'Generale infos',
+  all: 'All users',
+  new: 'New user',
+  update: 'Update user',
 }

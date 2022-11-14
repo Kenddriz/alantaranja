@@ -20,6 +20,9 @@
               v-for="(fil, index) in filterOptions"
               :key="index"
               clickable
+              @click="input.from = fil.value"
+              :active="input.from === fil.value"
+              active-class="bg-amber text-white"
               v-close-popup>
               <q-item-section avatar>
                 <q-icon :name="fil.icon" />
@@ -43,6 +46,9 @@
               v-for="(fil, index) in orderOptions"
               :key="index"
               clickable
+              @click="input.to = fil.value"
+              :active="input.to === fil.value"
+              active-class="bg-amber text-white"
               v-close-popup>
               <q-item-section avatar>
                 <q-icon :name="fil.icon" />
@@ -56,9 +62,21 @@
       </q-btn>
     </div>
 
-    <q-input color="white" dark dense>
+    <q-input
+      v-model="keyword"
+      :model-value="keyword"
+      @keyup.enter="input.keyword = keyword"
+      color="white"
+      dark
+      dense>
       <template v-slot:append>
-        <q-btn color="white" flat dense icon="search" />
+        <q-btn
+          @click="input.keyword = keyword"
+          color="white"
+          :loading="loading"
+          flat
+          dense
+          icon="search" />
       </template>
     </q-input>
 
@@ -81,7 +99,7 @@
     <q-item>
       <q-item-section>
         <q-item-label header>
-          All topics
+          {{ $t('topic.all') }}
         </q-item-label>
       </q-item-section>
 
@@ -126,7 +144,7 @@
 </template>
 
 <script lang="ts" setup>
-  import {computed, reactive} from "vue";
+import {computed, reactive, ref} from "vue";
   import {PaginationInput, QueryTopicsPaginateArgs, TopicsPagination} from "src/graphql/types";
   import {gql} from "@apollo/client/core";
   import {SUBJECT_FIELDS} from "src/graphql/topic/topic";
@@ -136,7 +154,7 @@
 
   const filterOptions = [
     { label: 'date', value: 'created_at', icon: 'event' },
-    { label: 'topic.topic', value: 'title', icon: 'topic' }
+    { label: 'topic.subject', value: 'title', icon: 'topic' }
   ];
 
   const orderOptions = [
@@ -151,6 +169,8 @@
     from: 'created_at',
     keyword: '',
   });
+
+  const keyword = ref<string>('');
 
   type Data = {
     topicsPaginate: TopicsPagination;

@@ -3,5 +3,7 @@ export default {
   categoryEquals: 'Categories must different',
   categoryExist: 'Category already exists',
   categoryFailedSave: 'Unable to save category',
-  removeConfirmation: 'Are you sure to delete this category and all its subcategories ?'
+  removeConfirmation: 'Are you sure to delete this category and all its subcategories ?',
+  label: 'Label',
+  parent: 'Parent',
 }

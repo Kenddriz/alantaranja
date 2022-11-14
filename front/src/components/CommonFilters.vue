@@ -15,12 +15,24 @@
       </q-select>
 
       <q-input
-        :model-value="filter"
-        @update:model-value="$emit('update:filter', $event)"
+        v-model="keyword"
+        :model-value="keyword"
+        @keyup.enter="$emit('update:filter', keyword)"
         dense
         outlined
         class="col-12 col-md-4"
-        label="Search" />
+        :label="$t('search')">
+        <template v-slot:after>
+          <q-btn
+            class="fit"
+            color="grey"
+            @click="$emit('update:filter', keyword)"
+            no-caps
+            outline
+            unelevated
+            icon="search" />
+        </template>
+      </q-input>
 
       <q-input
         dense
@@ -81,6 +93,7 @@
     emits('update:from', val.from);
     emits('update:to', val.to);
   }
+  const keyword = ref<string>('');
 </script>
 
 <style scoped>

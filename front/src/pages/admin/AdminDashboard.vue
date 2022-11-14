@@ -1,19 +1,17 @@
 <template>
-  <q-page padding>
-    <div class="row q-col-gutter-lg">
-      <OverviewsComponent />
-    </div>
-    <div class="row q-col-gutter-lg q-mt-lg">
+  <div class="row q-col-gutter-lg">
+    <OverviewsComponent />
+  </div>
+  <div class="row q-col-gutter-lg q-mt-lg">
 
-      <div class="col-12 col-md-8">
-        <PaymentsMonthly />
-      </div>
-
-      <div class="col-12 col-md-4">
-        <PaymentsStatus class="fit" />
-      </div>
+    <div class="col-12 col-md-8">
+      <PaymentsMonthly />
     </div>
-  </q-page>
+
+    <div class="col-12 col-md-4">
+      <PaymentsStatus class="fit" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>

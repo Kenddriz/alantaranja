@@ -9,6 +9,8 @@ import {DocumentSearchResolver} from "./resolvers/document-search-resolver";
 import {DocumentRemoveResolver} from "./resolvers/document-remove-resolver";
 import {DocumentUpdateResolver} from "./resolvers/document-update-resolver";
 import {DocumentDownloadResolver} from "./resolvers/document-download-resolver";
+import {DocumentAddFilesResolver} from "./resolvers/document-add-files-resolver";
+import {DocumentUserFieldResolver} from "./resolvers/document-user-field-resolver";
 
 @Global()
 @Module({
@@ -21,6 +23,8 @@ import {DocumentDownloadResolver} from "./resolvers/document-download-resolver";
     DocumentPaginateResolver,
     DocumentDownloadResolver,
     DocumentSearchResolver,
+    DocumentAddFilesResolver,
+    DocumentUserFieldResolver,
     DocumentService
   ],
   exports: [DocumentService]

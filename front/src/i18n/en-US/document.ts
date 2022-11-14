@@ -14,4 +14,8 @@ export default {
   filename: 'File name',
   downloads: 'Files downloads',
   removeWarning: 'Are you sure to delete this document definitively ?',
+  all: 'All documents',
+  new: 'New document',
+  addFiles: 'Add new files',
+  selectFiles: 'Select files',
 }

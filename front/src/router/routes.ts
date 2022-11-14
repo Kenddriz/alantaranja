@@ -2,6 +2,9 @@ import { RouteRecordRaw } from 'vue-router';
 import {fillRegistrationGuard} from 'src/router/middleware/fill-registration-guard';
 import {forgotPasswordGuard} from 'src/router/middleware/forgot-password-guard';
 import {adminGuard} from 'src/router/middleware/admin-guard';
+import {teacherGuard} from "src/router/middleware/teacher-guard";
+import {mySpaceGuard} from "src/router/middleware/my-space-guard";
+import {forumGuard} from "src/router/middleware/forum-guard";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -18,7 +21,8 @@ const routes: RouteRecordRaw[] = [
         path: 'topic-details/:id',
         component: () => import('pages/forum/TopicDetails.vue'),
       },
-    ]
+    ],
+    beforeEnter: forumGuard,
   },
   {
     path: '/',
@@ -66,19 +70,19 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        alias: 'home',
-        name: 'home',
-        component: () => import('pages/admin/AdminHome.vue'),
+        name: 'dashboard',
+        alias: 'dashboard',
+        component: () => import('pages/admin/AdminDashboard.vue'),
       },
       {
         path: 'documents',
         name: 'document',
-        component: () => import('pages/admin/AdminDocuments.vue'),
+        component: () => import('pages/common/DocumentsPage.vue'),
       },
       {
         path: 'categories',
         name: 'category',
-        component: () => import('pages/admin/AdminCategories.vue'),
+        component: () => import('components/category/CategoryComponent.vue'),
       },
       {
         path: 'users',
@@ -88,18 +92,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         name: 'profile',
-        component: () => import('pages/ProfilePage.vue'),
+        component: () => import('pages/common/ProfilePage.vue'),
       },
       {
         path: 'payments',
         name: 'payment',
         component: () => import('pages/admin/AdminPayments.vue'),
       },
-      {
-        path: 'dashboard',
-        name: 'dashboard',
-        component: () => import('pages/admin/AdminDashboard.vue'),
-      }
     ],
   },
   {
@@ -125,9 +124,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         name: 'userProfile',
-        component: () => import('pages/ProfilePage.vue'),
+        component: () => import('pages/common/ProfilePage.vue'),
       },
     ],
+    beforeEnter: mySpaceGuard,
   },
   {
     path: '/teacher',
@@ -135,19 +135,14 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        alias: 'document-create',
-        name: 'teacherDocument',
-        component: () => import('pages/teacher/TeacherDocumentCreate.vue'),
-      },
-      {
-        path: 'list',
+        alias: 'list',
         name: 'teacherDocumentList',
-        component: () => import('pages/teacher/TeacherDocumentsList.vue'),
+        component: () => import('pages/common/DocumentsPage.vue'),
       },
       {
         path: 'profile',
         name: 'teacherProfile',
-        component: () => import('pages/ProfilePage.vue'),
+        component: () => import('pages/common/ProfilePage.vue'),
       },
       {
         path: 'categories',
@@ -155,6 +150,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('components/category/CategoryComponent.vue'),
       },
     ],
+    beforeEnter: teacherGuard,
   },
   // Always leave this as last one,
   // but you can also remove it

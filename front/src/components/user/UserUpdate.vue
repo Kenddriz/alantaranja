@@ -13,24 +13,29 @@
     >
       <template v-slot:title>
         <q-card-section class="q-py-none flex items-center justify-between">
-          Update user
+          {{ $t('user.update') }}
           <q-icon
             class="q-ml-md"
             size="sm"
-            name="person_add" />
+            name="verified_user" />
         </q-card-section>
       </template>
-      <q-card-actions align="center" class="q-pb-md q-px-md">
+      <q-card-section class="flex justify-end q-gutter-x-md q-pt-none">
         <q-btn
-          rounded
-          class="full-width"
-          label="Save"
+          v-close-popup
+          color="deep-orange"
+          icon="close"
+          :label="$t('close')"
+          unelevated />
+
+        <q-btn
+          :label="$t('save')"
           type="submit"
           unelevated
           :loading="loading"
           color="primary"
           icon="save" />
-      </q-card-actions>
+      </q-card-section>
     </UserForm>
   </q-dialog>
 </template>
@@ -42,9 +47,10 @@
   import {USER_FIELDS} from 'src/graphql/users/user';
   import {reactive, ref} from 'vue';
   import {useMutation} from '@vue/apollo-composable';
-  import {useDialogPluginComponent} from 'quasar';
+  import {useDialogPluginComponent, useQuasar} from 'quasar';
   import UserForm from './UserForm.vue';
   import {cloneDeep} from '@apollo/client/utilities';
+  import {useI18n} from "vue-i18n";
 
   const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
@@ -80,11 +86,21 @@
   function submit() {
     void mutate({ input, avatar: image.value });
   }
+  const { notify } = useQuasar();
+  const { t } = useI18n();
 
   onDone(({ data }) => {
-    console.log(data);
     if(data?.userUpdate) {
       onDialogHide();
+      notify({
+        color: 'positive',
+        message: t('updateSuccess')
+      });
+    } else {
+      notify({
+        color: 'negative',
+        message: t('updateFailed')
+      });
     }
   });
 </script>

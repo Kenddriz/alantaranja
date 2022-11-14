@@ -34,7 +34,7 @@ export const movable = () => {
 }
 
 export const CONSTANTS = {
-  baseRoutes: ['/admin', '/teacher', '/my-space'],
+  baseRoutes: ['/admin', '/admin', '/teacher', '/my-space'],
   role: 'role',
   token: 'token',
   userId: 'userId',

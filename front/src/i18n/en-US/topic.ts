@@ -10,4 +10,7 @@ export default {
   info: 'Make sur you set the right concerned document. The uploader will be notified to see your post.',
   removeConfirmation: 'Are you sure to delete this message ?',
   update: 'Update message',
+  all: 'All topics',
+  missingBody: 'Topic body is required!',
+  removeWarning: 'Are you sure to delete this topic definitively ?',
 }

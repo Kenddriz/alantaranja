@@ -12,6 +12,8 @@ import {computed, reactive} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {CONSTANTS, getExt} from 'src/utils/utils';
 import {useRoute} from "vue-router";
+import {date} from "quasar";
+import formatDate = date.formatDate;
 
 type Data = {
   documentsPaginate: DocumentsPagination;
@@ -22,6 +24,7 @@ const QUERY = gql`
       documentsPaginate(input: $input) {
         items {
           ${DOCUMENT_FIELDS}
+          user{id lastName firstName}
         }
         ${PAGINATION_META}
       }
@@ -36,7 +39,7 @@ export const useDocumentsPaginate = () => {
       name: 'createdAt',
       label: t('date'),
       align: 'center',
-      field: 'createdAt',
+      field: (doc: Document) => formatDate(doc.createdAt, t('localDate.long')),
       sortable: true
     },
     {
@@ -68,20 +71,22 @@ export const useDocumentsPaginate = () => {
       sortable: true
     },
     {
-      name: 'types',
+      name: 'user',
       align: 'center',
-      label: t('document.types'),
-      field: (doc: Document) => doc.files.reduce((cum: string[], cur) => {
+      label: t('by'),
+      field: (doc: Document) => `${doc.user.lastName} ${doc.user.firstName}`,
+      /*field: (doc: Document) => doc.files.reduce((cum: string[], cur) => {
         const ext = getExt(cur.name);
         if(!cum.find(v => v === ext)) cum.push(ext);
         return cum;
-      }, []).join(', '),
+      }, []).join(', '),*/
       sortable: true
     },
     {
       name: 'price',
+      align: 'center',
       label: t('document.price'),
-      field: 'price',
+      field: (doc: Document) => doc.price ? `${doc.price} Ar` : t('free'),
       sortable: true
     },
     {

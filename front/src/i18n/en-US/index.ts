@@ -69,4 +69,7 @@ export default {
   direction: 'Direction',
   asc: 'ASC',
   desc: 'DESC',
+  create: 'Create',
+  free: 'Free',
+  add: 'Add',
 }

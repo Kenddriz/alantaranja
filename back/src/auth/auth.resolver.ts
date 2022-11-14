@@ -18,13 +18,22 @@ export class AuthResolver {
 
   @Mutation(() => LoginDto)
   async login(@Args('input') input: AuthInput): Promise<LoginDto> {
-    const user = await this.authService.validateUser(input);
-    return {
-      token: await this.authService.login({
-        id: user.id,
-      }),
-      user,
-    };
+    return new Promise<LoginDto>((resolve, reject) => {
+      this.authService
+          .validateUser(input)
+          .then(user => {
+            user.lastConnexion = new Date();
+            this.userService.save(user)
+                .then(async user => {
+                  resolve({
+                    token: await this.authService.login({
+                      id: user.id,
+                    }),
+                    user,
+                  })
+                }).catch(err => reject(err));
+          }).catch(err => reject(err));
+    })
   }
 
   @Query(() => User, { nullable: true })

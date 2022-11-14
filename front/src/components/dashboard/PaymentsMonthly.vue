@@ -46,8 +46,7 @@
       if(data) {
         for(let index = 0; index < 12; index++) {
           const val = data.find(v => v.month === index + 1);
-          //if(val)newSeries[0].data[index] = val.amount;
-          newSeries[0].data[index] = (index * 50 + 100);
+          if(val)newSeries[0].data[index] = val.amount;
         }
       }
       return newSeries;

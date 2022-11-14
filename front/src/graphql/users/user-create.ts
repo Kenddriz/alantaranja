@@ -28,7 +28,7 @@ const defaultInput = {
   phone: '',
 }
 
-export const useUserCreate = () => {
+export const useUserCreate = (callback: any = null) => {
 
   const { t } = useI18n();
 
@@ -69,6 +69,8 @@ export const useUserCreate = () => {
       passwordConfirm.value = '';
       Object.assign(input, defaultInput);
       avatar.value = null;
+
+      if(callback) callback();
     }
     else {
       Dialog.create({

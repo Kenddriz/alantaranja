@@ -52,6 +52,12 @@ export type Document = {
   price: Scalars['Float'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+  user: User;
+};
+
+export type DocumentAddFilesInput = {
+  id: Scalars['String'];
+  sizes: Array<Scalars['Float']>;
 };
 
 export type DocumentCreateInput = {
@@ -168,6 +174,7 @@ export type Meta = {
 export type Mutation = {
   __typename?: 'Mutation';
   categoryCreate: Family;
+  documentAddFiles: Document;
   documentCreate: Document;
   documentRemove: Scalars['String'];
   documentUpdate: Document;
@@ -184,8 +191,8 @@ export type Mutation = {
   resetPassword: User;
   sendCode: Scalars['Boolean'];
   setupDocument: Scalars['String'];
-  subjectRemove: Scalars['String'];
   topicCreate: Topic;
+  topicRemove: Scalars['String'];
   topicUpdate: Topic;
   updatePassword?: Maybe<User>;
   userCreate: User;
@@ -197,6 +204,12 @@ export type Mutation = {
 
 export type MutationCategoryCreateArgs = {
   input: CategoryCreateInput;
+};
+
+
+export type MutationDocumentAddFilesArgs = {
+  files: Array<Scalars['Upload']>;
+  input: DocumentAddFilesInput;
 };
 
 
@@ -283,13 +296,13 @@ export type MutationSetupDocumentArgs = {
 };
 
 
-export type MutationSubjectRemoveArgs = {
-  id: Scalars['String'];
+export type MutationTopicCreateArgs = {
+  input: TopicCreateInput;
 };
 
 
-export type MutationTopicCreateArgs = {
-  input: TopicCreateInput;
+export type MutationTopicRemoveArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -472,10 +485,12 @@ export type Topic = {
   body: Scalars['String'];
   createdAt: Scalars['DateTime'];
   document?: Maybe<Document>;
+  documentId: Scalars['String'];
   id: Scalars['String'];
   statistics: Array<Scalars['Int']>;
   title: Scalars['String'];
   user?: Maybe<User>;
+  userId: Scalars['Int'];
 };
 
 export type TopicCreateInput = {
@@ -624,6 +639,7 @@ export type ResolversTypes = {
   CreatePaymentInput: CreatePaymentInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Document: ResolverTypeWrapper<Document>;
+  DocumentAddFilesInput: DocumentAddFilesInput;
   DocumentCreateInput: DocumentCreateInput;
   DocumentDownloadInput: DocumentDownloadInput;
   DocumentUpdateInput: DocumentUpdateInput;
@@ -679,6 +695,7 @@ export type ResolversParentTypes = {
   CreatePaymentInput: CreatePaymentInput;
   DateTime: Scalars['DateTime'];
   Document: Document;
+  DocumentAddFilesInput: DocumentAddFilesInput;
   DocumentCreateInput: DocumentCreateInput;
   DocumentDownloadInput: DocumentDownloadInput;
   DocumentUpdateInput: DocumentUpdateInput;
@@ -748,6 +765,7 @@ export type DocumentResolvers<ContextType = any, ParentType extends ResolversPar
   price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -806,6 +824,7 @@ export type MetaResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   categoryCreate?: Resolver<ResolversTypes['Family'], ParentType, ContextType, RequireFields<MutationCategoryCreateArgs, 'input'>>;
+  documentAddFiles?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDocumentAddFilesArgs, 'files' | 'input'>>;
   documentCreate?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDocumentCreateArgs, 'files' | 'input'>>;
   documentRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDocumentRemoveArgs, 'id'>>;
   documentUpdate?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationDocumentUpdateArgs, 'files' | 'input'>>;
@@ -822,8 +841,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   resetPassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'input'>>;
   sendCode?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSendCodeArgs, 'input'>>;
   setupDocument?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSetupDocumentArgs, 'input'>>;
-  subjectRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSubjectRemoveArgs, 'id'>>;
   topicCreate?: Resolver<ResolversTypes['Topic'], ParentType, ContextType, RequireFields<MutationTopicCreateArgs, 'input'>>;
+  topicRemove?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationTopicRemoveArgs, 'id'>>;
   topicUpdate?: Resolver<ResolversTypes['Topic'], ParentType, ContextType, RequireFields<MutationTopicUpdateArgs, 'input'>>;
   updatePassword?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdatePasswordArgs, 'input'>>;
   userCreate?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUserCreateArgs, 'input'>>;
@@ -905,10 +924,12 @@ export type TopicResolvers<ContextType = any, ParentType extends ResolversParent
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   document?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType>;
+  documentId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   statistics?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
