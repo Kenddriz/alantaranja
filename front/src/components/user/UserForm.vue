@@ -48,15 +48,15 @@
           dense
           :label="$t('user.phone')" />
 
-        <q-card-actions v-if="role !== undefined" align="between">
+        <q-card-actions v-if="role !== undefined" class="q-gutter-x-md">
           <q-radio
             v-for="(rol, index) in roles"
             :key="index"
             :model-value="role"
             name="role"
             @update:model-value="$emit('update:role', $event)"
-            :val="index"
-            :label="rol" />
+            :val="rol.role"
+            :label="rol.label" />
         </q-card-actions>
       </q-card-section>
       <slot></slot>
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import {CONSTANTS, REGEXP} from 'src/utils/utils';
+import {CONSTANTS, getUserRole, REGEXP} from 'src/utils/utils';
   import {isValidNumber} from 'libphonenumber-js';
   import ImageInput from 'components/ImageInput.vue';
   import {useI18n} from "vue-i18n";
@@ -103,9 +103,14 @@ import {CONSTANTS, REGEXP} from 'src/utils/utils';
 
   const { tm } = useI18n();
 
-  const userRole = Number(localStorage.getItem(CONSTANTS.role));
-
-  const roles = (tm('user.roles') as string[]).filter((role, index) => index >= userRole && index > 0);
+  const uRole = getUserRole();
+  const roles = (tm('user.roles') as string[])
+    .reduce((cum, label, role) => {
+        if(!role) return cum;
+        if(!uRole) return [...cum, { label, role}];
+        else if(role > uRole) return [...cum, { label, role}];
+        return cum;
+  }, []);
 </script>
 
 <style scoped>

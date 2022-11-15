@@ -6,6 +6,7 @@ export default {
   notePlaceholder: 'Enter your note here ...',
   status: 'Status',
   pStatus: 'Payment status',
+  state: 'Payments state',
   pending: 'Pending',
   approved: 'Approved',
   approvedConfirmation: 'Are you sur to approve this payment ?',
@@ -28,4 +29,5 @@ export default {
   pRejected: 'Payment rejected',
   downloadedAt: 'Download date',
   downloaded: 'Already downloaded',
+  list: 'Payment list',
 }

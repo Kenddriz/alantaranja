@@ -390,6 +390,15 @@ export type PaymentsMonthlyOutput = {
   month: Scalars['Int'];
 };
 
+export type PaymentsPaginateInput = {
+  from?: InputMaybe<Scalars['String']>;
+  keyword?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  page: Scalars['Int'];
+  status: Array<Scalars['String']>;
+  to?: InputMaybe<Scalars['String']>;
+};
+
 export type PaymentsPagination = {
   __typename?: 'PaymentsPagination';
   items: Array<Payment>;
@@ -433,12 +442,12 @@ export type QueryDocumentsSearchArgs = {
 
 
 export type QueryMyPaymentsPaginateArgs = {
-  input: PaginationInput;
+  input: PaymentsPaginateInput;
 };
 
 
 export type QueryPaymentsPaginateArgs = {
-  input: PaginationInput;
+  input: PaymentsPaginateInput;
 };
 
 
@@ -665,6 +674,7 @@ export type ResolversTypes = {
   PaymentDocument: ResolverTypeWrapper<PaymentDocument>;
   PaymentStatusInput: PaymentStatusInput;
   PaymentsMonthlyOutput: ResolverTypeWrapper<PaymentsMonthlyOutput>;
+  PaymentsPaginateInput: PaymentsPaginateInput;
   PaymentsPagination: ResolverTypeWrapper<PaymentsPagination>;
   PaymentsStatusStatisticsOutput: ResolverTypeWrapper<PaymentsStatusStatisticsOutput>;
   Query: ResolverTypeWrapper<{}>;
@@ -721,6 +731,7 @@ export type ResolversParentTypes = {
   PaymentDocument: PaymentDocument;
   PaymentStatusInput: PaymentStatusInput;
   PaymentsMonthlyOutput: PaymentsMonthlyOutput;
+  PaymentsPaginateInput: PaymentsPaginateInput;
   PaymentsPagination: PaymentsPagination;
   PaymentsStatusStatisticsOutput: PaymentsStatusStatisticsOutput;
   Query: {};

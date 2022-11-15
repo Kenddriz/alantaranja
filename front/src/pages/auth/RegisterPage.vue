@@ -109,8 +109,7 @@
     passwordConfirm,
     equalPasswords,
   } = useUserCreate();
-
-
+  input.role = 3;
 </script>
 
 <style scoped>

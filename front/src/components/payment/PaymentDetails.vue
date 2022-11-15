@@ -52,6 +52,7 @@
   import {Payment, PaymentDocument} from 'src/graphql/types';
   import {useI18n} from 'vue-i18n';
   import { getImage, movable } from 'src/utils/utils';
+  import {formatFilesSize} from "src/utils/file";
 
 const { dialogRef } = useDialogPluginComponent();
 
@@ -78,7 +79,7 @@ const { dialogRef } = useDialogPluginComponent();
       name: 'sizes',
       align: 'center',
       label: t('document.size'),
-      field: (row: PaymentDocument) => row.document.files.reduce((cum, cur) => cum + cur.size, 0),
+      field: (row: PaymentDocument) => formatFilesSize(row.document.files),
       sortable: true
     },
     {

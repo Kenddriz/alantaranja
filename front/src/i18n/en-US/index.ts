@@ -73,4 +73,6 @@ export default {
   free: 'Free',
   add: 'Add',
   never: 'Never',
+  today: 'Today',
+  by: 'By',
 }

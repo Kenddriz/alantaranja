@@ -66,11 +66,10 @@
   import {ref} from 'vue';
   import {ROUTES_DATA} from 'layouts/routes-data';
   import {useSession} from 'src/graphql/users/session';
-  import {cart} from 'src/graphql/payment/cart';
 
   const rightMenu = ref(false);
 
-  const menu = ROUTES_DATA.admin;
+  const menu = ROUTES_DATA.admin
 
   const { logout } = useSession();
 

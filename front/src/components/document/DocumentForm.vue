@@ -1,5 +1,5 @@
 <template>
-  <q-card style="width: 500px; max-width: 90vw" flat>
+  <q-card style="width: 800px; max-width: 90vw;" flat>
     <q-form
       autocorrect="off"
       autocomplete="off"
@@ -51,23 +51,17 @@
           label="Title" />
 
         <q-input
-          v-if="showPrice"
+          v-if="getUserRole() <= 1"
           type="number"
           :model-value="price"
           @update:model-value="$emit('update:price', Number($event))"
           dense
           label="Price" />
 
-        <q-input
-          lazy-rules="ondemand"
-          :rules="[(v) => v?.length || '']"
-          hide-bottom-space
+        <div>{{ $t('description') }}</div>
+        <MyEditor
           :model-value="description"
-          @update:model-value="$emit('update:description', $event)"
-          type="textarea"
-          dense
-          outlined
-          :label="$t('description')" />
+          @update:model-value="$emit('update:description', $event)" />
 
         <q-checkbox
           color="amber"
@@ -94,9 +88,10 @@
 
 <script lang="ts" setup>
   import CategoryDialog from 'components/CategoryDialog.vue';
-  import {CONSTANTS, makeTree} from 'src/utils/utils';
+  import {getUserRole, makeTree} from 'src/utils/utils';
   import {computed, ref} from 'vue';
   import {Family} from 'src/graphql/types';
+  import MyEditor from "components/MyEditor.vue";
 
   const props = defineProps<{
     files: File[],
@@ -127,8 +122,6 @@
     emits('update:familyId', familyId);
     categoryDialog.value = false;
   }
-
-  const showPrice = ['0', '1'].includes(String(localStorage.getItem(CONSTANTS.role)));
 
   function validFile(event: any[]) {
     if(props?.isUpdate) return true;

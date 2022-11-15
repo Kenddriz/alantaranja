@@ -22,5 +22,6 @@ export default  {
   topic: 'Topics',
   createTopic: 'New topic',
   topicDetails: 'Topic details',
+  fillRegistration: 'Fill registration',
   forum: 'Forum',
 }

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Payment} from "./payment.entity";
 import {Brackets, Repository} from "typeorm";
-import {PaginationInput} from "../shared/shared.input";
 import {paginate, Pagination} from "nestjs-typeorm-paginate";
+import { PaymentsPaginateInput} from "./resolvers/payment-paginate-resolver";
 
 @Injectable()
 export class PaymentService {
@@ -19,38 +19,27 @@ export class PaymentService {
     return this.repository.findOneBy({ id });
   }
 
-  async paginate(input: PaginationInput, userId = 0): Promise<Pagination<Payment>> {
+  async paginate(input: PaymentsPaginateInput, userId = 0): Promise<Pagination<Payment>> {
 
-      input.keyword = `%${input.keyword}%`;
-    const { from, to, keyword, ...res } = input;
+    if(!input.status.length)input.status = ['pending', 'approved', 'rejected'];
+    input.keyword = `%${input.keyword}%`;
+    const { from, to, keyword, status, ...res } = input;
 
     const query = this.repository
-        .createQueryBuilder('pay');
+        .createQueryBuilder('pay')
+        .where('pay.status IN (:...status)', { status });
+
+    if(userId) query.andWhere('pay.user_id = :userId', { userId });
+
+    if(from) query.andWhere('pay.created_at BETWEEN :from AND :to', { from, to });
 
     if(keyword) {
       query.innerJoin('users', 'user', 'user.id = pay.user_id')
-          .where(new Brackets(q => {
+          .andWhere(new Brackets(q => {
             q.where('user.phone LIKE :keyword', { keyword })
-            q.orWhere('user.email ILIKE :keyword', { keyword });
             q.orWhere('user.first_name ILIKE :keyword', { keyword });
             q.orWhere('user.last_name ILIKE :keyword', { keyword });
           }))
-    }
-
-    if(userId && from) {
-      if(keyword)query.andWhere('pay.user_id = :userId', { userId });
-      else query.where('pay.user_id = :userId', { userId });
-      query.andWhere('pay.created_at BETWEEN :from AND :to', { from, to });
-    }
-
-    else if(userId) {
-      if(keyword)query.andWhere('pay.user_id = :userId', { userId });
-      else query.where('pay.user_id = :userId', { userId });
-    }
-
-    else if(from) {
-      if(keyword) query.andWhere('pay.created_at BETWEEN :from AND :to', { from, to })
-      else query.where('pay.created_at BETWEEN :from AND :to', { from, to })
     }
 
     query.orderBy('pay.created_at', 'DESC');

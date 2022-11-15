@@ -1,15 +1,16 @@
 <template>
   <q-card flat class="card text-dark">
-    <q-card-section class="text-h6">
-      Payments status
+    <q-card-section class="text-h6 full-width">
+      {{ $t('payment.state') }}
     </q-card-section>
     <apexchart
-      class="q-ma-md"
       type="pie"
+      class="full-width"
       height="400"
       :options="chartOptions"
       :series="series"
     />
+    <slot></slot>
   </q-card>
 </template>
 
@@ -39,17 +40,20 @@
   const { t } = useI18n();
   const series = computed(() => {
     const data = result.value?.paymentsStatusStatistics || [];
-    return ['pending', 'approved', 'rejected'].map((val) => {
+    return ['pending', 'approved', 'rejected'].map((val, index) => {
       return data.find(s => s.status === val)?.count || 0;
     })
   });
 
   const chartOptions = {
     labels: [t('payment.pending'), t('payment.approved'), t('payment.rejected')],
-    colors: ['#546E7A', '#82dc95', '#E91E63'],
+    colors: ['#546E7A', '#62ec78', '#F2C037'],
     dataLabels: {
       enabled: true,
-      formatter: function (val, opts) {
+      style: {
+        fontSize: '18px',
+      },
+      formatter: function (val: string, opts: any) {
         return opts.w.config.series[opts.seriesIndex]
       },
     },
@@ -60,8 +64,7 @@
     },
     tooltip: {
       y: {
-        formatter: function(value, { seriesIndex, dataPointIndex }) {
-          console.log(seriesIndex, dataPointIndex);
+        formatter: function(value: number) {
           return value;
         }
       }

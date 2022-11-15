@@ -2,7 +2,7 @@ import {computed, ref} from 'vue';
 import {CONSTANTS} from 'src/utils/utils';
 import { Document }  from 'src/graphql/types';
 
-type Cart = {
+export type Cart = {
   id: string;
   title: string;
   category?: string;

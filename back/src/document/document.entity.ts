@@ -37,7 +37,7 @@ export class Document {
   files: FileProperty[];
 
   @Field(() => String)
-  @Column({ type: 'varchar', length: '255' })
+  @Column({ type: 'text', default: '' })
   description: string;
 
   @Field(() => Float)

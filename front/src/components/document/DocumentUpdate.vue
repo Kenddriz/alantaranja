@@ -1,7 +1,6 @@
 <template>
   <q-dialog ref="dialogRef">
     <DocumentForm
-      style="width: 700px; max-width: 90vw;"
       @submit="submit"
       v-model:title="input.title"
       v-model:description="input.description"
@@ -132,7 +131,7 @@
     if(data?.documentUpdate) {
       notify({
         color: 'positive',
-        message: t('document.uploaded')
+        message: t('updateSuccess')
       });
       progress.value = 0;
       files.value.length = 0;

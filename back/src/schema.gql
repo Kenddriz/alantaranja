@@ -162,8 +162,8 @@ type Query {
   categories: [Category!]!
   documentsPaginate(input: DocumentsPaginationInput!): DocumentsPagination!
   documentsSearch(input: SearchDocumentsInput!): [Document!]!
-  paymentsPaginate(input: PaginationInput!): PaymentsPagination!
-  myPaymentsPaginate(input: PaginationInput!): PaymentsPagination!
+  paymentsPaginate(input: PaymentsPaginateInput!): PaymentsPagination!
+  myPaymentsPaginate(input: PaymentsPaginateInput!): PaymentsPagination!
   paymentsMonthly: [PaymentsMonthlyOutput!]!
   paymentsStatusStatistics: [PaymentsStatusStatisticsOutput!]!
   families: [Family!]!
@@ -193,6 +193,15 @@ input DocumentsPaginationInput {
 
 input SearchDocumentsInput {
   title: String!
+}
+
+input PaymentsPaginateInput {
+  to: String
+  from: String
+  keyword: String
+  page: Int!
+  limit: Int!
+  status: [String!]!
 }
 
 type Mutation {

@@ -20,7 +20,7 @@ export class Payment {
 
   @Field()
   @Column({ type: 'varchar', length: 9, default: 'pending' })
-  status: string; // pending, approved, refused
+  status: string; // pending, approved, rejected
 
   @Field()
   @Column({ type: 'varchar', length: 255 })

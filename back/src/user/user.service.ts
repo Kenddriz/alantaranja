@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository} from 'typeorm';
+import {Brackets, Repository} from 'typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { PaginationInput } from '../shared/shared.input';
 
@@ -39,11 +39,13 @@ export class UserService {
     keyword = `%${keyword}%`;
     const query = this.repository
       .createQueryBuilder()
-      .where('first_name LIKE :keyword', { keyword })
-      .orWhere('phone LIKE :keyword', { keyword })
-      .orWhere('email LIKE :keyword', { keyword });
-
-    if(from)query.where('created_at BETWEEN :from AND :to', { from, to });
+        .where('role <> 0')
+        .andWhere(new Brackets(q => {
+           q.where('first_name LIKE :keyword', { keyword })
+            .orWhere('phone LIKE :keyword', { keyword })
+            .orWhere('email LIKE :keyword', { keyword });
+        }));
+    if(from)query.andWhere('created_at BETWEEN :from AND :to', { from, to });
 
     query.orderBy('created_at', 'DESC');
 

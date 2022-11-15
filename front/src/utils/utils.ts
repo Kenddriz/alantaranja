@@ -53,3 +53,7 @@ export const CONSTANTS = {
 export function getExt(name: string) {
   return name.substring(name.lastIndexOf('.') + 1);
 }
+
+export function getUserRole() {
+  return Number(localStorage.getItem(CONSTANTS.role));
+}

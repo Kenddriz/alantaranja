@@ -66,7 +66,7 @@
 
 <script lang="ts" setup>
   import {useI18n} from 'vue-i18n';
-  import { useCart } from 'src/graphql/payment/cart';
+  import {Cart, useCart} from 'src/graphql/payment/cart';
   import {MutationPaymentCreateArgs, Payment} from 'src/graphql/types';
   import {useMutation} from '@vue/apollo-composable';
   import {gql} from '@apollo/client/core';
@@ -76,6 +76,7 @@
   import {useQuasar} from 'quasar';
   import {CONSTANTS} from 'src/utils/utils';
   import {useRouter} from 'vue-router';
+  import {formatBytes} from "src/utils/file";
 
   const { t } = useI18n();
 
@@ -105,13 +106,13 @@
       name: 'sizes',
       align: 'center',
       label: t('document.size'),
-      field: 'size',
+      field: (row: Cart) => formatBytes(row.size),
       sortable: true
     },
     {
       name: 'price',
       label: t('document.price'),
-      field: 'price',
+      field: (row: Cart) => row.price ? `${row.price} Ar` : t('free'),
       sortable: true
     },
     {

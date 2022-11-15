@@ -12,7 +12,7 @@ export default {
   status: 'Status',
   lastConnexion: 'Last connexion date',
   createdAt: 'Register date',
-  roles: ['Super admin', 'Admin', 'Standar'],
+  roles: ['Super admin', 'Cassier', 'Standar'],
   creationSuccess: 'User created successfully! He just needs check his email to verify his account.',
   creationFailed: 'Error! Unable to create user. Verify the mail.',
   login: 'Login',

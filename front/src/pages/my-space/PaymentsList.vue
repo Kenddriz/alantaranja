@@ -14,6 +14,17 @@
     separator="cell"
     row-key="id"
     flat>
+    <template v-slot:top-right>
+      <div class="q-gutter-md">
+        <q-checkbox
+          v-for="(stat, index) in ['pending', 'approved', 'rejected']"
+          :key="index"
+          :val="stat"
+          v-model="input.status"
+          :label="$t(`payment.${stat}`)"
+          color="amber" />
+      </div>
+    </template>
     <template v-slot:body-cell-status="props">
       <q-td
         :class="`text-${statusColor[props.value]}`"
@@ -58,7 +69,7 @@
   import {computed, defineAsyncComponent, reactive} from 'vue';
   import {
     Document,
-    PaginationInput, Payment,
+    PaginationInput, Payment, PaymentsPaginateInput,
     PaymentsPagination,
     QueryMyPaymentsPaginateArgs,
   } from 'src/graphql/types';
@@ -67,14 +78,16 @@
   import {PAYMENT_FIELDS} from 'src/graphql/payment/payment';
   import {InitialPagination, PAGINATION_META} from 'src/utils/pagination';
   import {useI18n} from 'vue-i18n';
-  import {useQuasar} from "quasar";
+  import {date, useQuasar} from "quasar";
   import {getExt} from "src/utils/utils";
+  import {getAmount} from "src/utils/file";
+  import formatDate = date.formatDate;
 
   type Data = {
     myPaymentsPaginate: PaymentsPagination;
   }
   const QUERY = gql`
-    query PaymentsPaginate($input: PaginationInput!){
+    query PaymentsPaginate($input: PaymentsPaginateInput!){
         myPaymentsPaginate(input: $input){
             items {
                 ${PAYMENT_FIELDS}
@@ -83,12 +96,13 @@
         }
     }
   `;
-  const input = reactive<PaginationInput>({
+  const input = reactive<PaymentsPaginateInput>({
     from: '',
     limit: 15,
     page: 1,
     keyword: '',
-    to: ''
+    to: '',
+    status: ['approved'],
   });
 
   const { t } = useI18n();
@@ -102,7 +116,7 @@
       name: 'createdAt',
       align: 'center',
       label: t('date'),
-      field: 'createdAt',
+      field: (row: Payment) => formatDate(row.createdAt, t('localDate.long')),
       sortable: true
     },
     {
@@ -128,7 +142,7 @@
     {
       name: 'price',
       label: t('document.price'),
-      field: (doc: Payment) => doc.documents.reduce((cum, cur) => cum + cur.price,0),
+      field: (doc: Payment) => getAmount(doc.documents),
       sortable: true
     },
     {
@@ -142,7 +156,7 @@
       name: 'downloadAt',
       align: 'center',
       label: t('payment.downloadedAt'),
-      field: 'downloadAt',
+      field: (row: Payment) => row.downloadAt && formatDate(row.downloadAt, t('localDate.long')),
       sortable: true
     },
     {

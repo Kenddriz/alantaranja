@@ -22,17 +22,28 @@
       <q-td class="text-right" :props="props">
         <!--remove_shopping_cart-->
         <q-btn
+          round
+          dense
           v-if="inCart(props.row.id)"
           @click="removeFromCart(props.row.id)"
           icon="remove_shopping_cart"
           color="deep-orange"
           flat />
         <q-btn
+          round
+          dense
           v-else
           @click="addToCart(props.row)"
           icon="add_shopping_cart"
           color="primary"
           flat />
+
+        <q-btn
+          @click="readMore(props.row.title, props.row.description)"
+          flat
+          round
+          color="brown-14"
+          icon="more_vert" />
       </q-td>
     </template>
   </q-table>
@@ -42,7 +53,9 @@
   import {useDocumentsPaginate} from 'src/graphql/document/documents-paginate';
   import {useCart} from 'src/graphql/payment/cart';
   import CommonFilters from '../CommonFilters.vue';
-  import { watch } from 'vue';
+  import {defineAsyncComponent, watch} from 'vue';
+  import {useQuasar} from "quasar";
+  import {Document} from "src/graphql/types";
 
   const props = defineProps<{
     categories: string[]
@@ -62,6 +75,15 @@
   columns.splice(6, 2);
 
   const { addToCart, inCart, removeFromCart } = useCart();
+
+  const { dialog } = useQuasar();
+
+  function readMore(title: string, description: string) {
+    dialog({
+      component: defineAsyncComponent(() => import("components/document/DocumentDescription.vue")),
+      componentProps: { title, description }
+    })
+  }
 </script>
 
 <style scoped>

@@ -29,14 +29,19 @@
       </q-td>
     </template>
     <template v-slot:body-cell-action="props">
-      <q-td :props="props">
+      <q-td
+        auto-width
+        v-if="(uRole = getUserRole()) !== undefined"
+        :props="props">
         <q-btn
+          v-if="!uRole || props.row.role > uRole"
           @click="openUpdate(props.row)"
           dense
           flat
           color="primary"
           icon="edit" />
         <q-btn
+          v-if="!uRole"
           dense
           flat
           color="deep-orange"
@@ -57,7 +62,7 @@
   import {useQuery} from '@vue/apollo-composable';
   import {useI18n} from 'vue-i18n';
   import {date, useQuasar} from 'quasar';
-  import {getImage} from 'src/utils/utils';
+  import {getImage, getUserRole} from 'src/utils/utils';
   import formatDate = date.formatDate;
 
   const range = ref({ from: '2020/07/08', to: '2020/07/17' });
@@ -74,23 +79,16 @@
     },
     {
       name: 'lastName',
-      label: t('user.lastName'),
+      label: t('name'),
       align: 'left',
-      field: 'lastName',
+      field: (row: User) => `${row.lastName} ${row.firstName}`,
       sortable: true
     },
     {
-      name: 'firstName',
-      label: t('user.firstName'),
+      name: 'email',
+      label: t('user.email'),
       align: 'left',
-      field: 'firstName',
-      sortable: true
-    },
-    {
-      name: 'status',
-      label: t('user.status'),
-      align: 'left',
-      field: 'status',
+      field: 'email',
       sortable: true
     },
     {
@@ -103,7 +101,7 @@
     {
       name: 'lastConnexion',
       label: t('user.lastConnexion'),
-      align: 'lastConnexion',
+      align: 'left',
       field: (row: User) => row.lastConnexion ? formatDate(row.lastConnexion, t('localDate.long')) : t('never'),
       sortable: true
     },

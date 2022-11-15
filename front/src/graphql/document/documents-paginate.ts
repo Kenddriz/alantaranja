@@ -20,12 +20,12 @@ type Data = {
   documentsPaginate: DocumentsPagination;
 }
 
-const QUERY = gql`
+const QUERY = (teacher = false) => gql`
     query DocumentsPaginate($input: DocumentsPaginationInput!){
       documentsPaginate(input: $input) {
         items {
           ${DOCUMENT_FIELDS}
-          user{id lastName firstName}
+          ${ teacher ? '' : 'user{id lastName firstName}'}
         }
         ${PAGINATION_META}
       }
@@ -35,6 +35,7 @@ const QUERY = gql`
 export const useDocumentsPaginate = () => {
   const { path } = useRoute();
   const { t } = useI18n();
+
   const columns = [
     {
       name: 'createdAt',
@@ -76,11 +77,6 @@ export const useDocumentsPaginate = () => {
       align: 'center',
       label: t('by'),
       field: (doc: Document) => `${doc.user.lastName} ${doc.user.firstName}`,
-      /*field: (doc: Document) => doc.files.reduce((cum: string[], cur) => {
-        const ext = getExt(cur.name);
-        if(!cum.find(v => v === ext)) cum.push(ext);
-        return cum;
-      }, []).join(', '),*/
       sortable: true
     },
     {
@@ -111,9 +107,15 @@ export const useDocumentsPaginate = () => {
     to: '',
     hidden: [true, false],
     categories: [],
-    userId: path.includes('teacher') ? Number(localStorage.getItem(CONSTANTS.userId)) : null,
+    userId: null,
   });
-  const { loading, result } = useQuery<Data, QueryDocumentsPaginateArgs>(QUERY, { input });
+
+  if(path.includes('teacher')) {
+    columns.splice(5, 2);
+    input.userId = Number(localStorage.getItem(CONSTANTS.userId));
+  }
+
+  const { loading, result } = useQuery<Data, QueryDocumentsPaginateArgs>(QUERY(path.includes('teacher')), { input });
 
   return {
     loading,

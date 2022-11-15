@@ -1,5 +1,8 @@
 <template>
   <q-form
+    autocorrect="off"
+    autocomplete="off"
+    spellcheck="false"
     @submit.prevent="submitLogin"
     style="min-width: 70%"
     class="q-gutter-y-md q-pa-md">
@@ -94,9 +97,12 @@
     {
       update: (cache, { data }) => {
         if(data && data.login.user.status !== -1) {
-          cache.writeQuery<WhoAmIData>({
-            query: WHOAMI,
-            data: { whoAmI: data.login.user },
+          cache.modify({
+            fields: {
+              whoAmI() {
+                return data.login.user
+              }
+            }
           });
         }
       }

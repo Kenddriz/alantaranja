@@ -7,12 +7,23 @@
     v-model:to="input.to" />
   <q-table
     class="q-mt-md"
-    title="Payments list"
+    :title="$t('payment.list')"
     :rows="payment.items"
     :columns="columns"
     :loading="loading || statusLoading"
     row-key="id"
     flat>
+    <template v-slot:top-right>
+      <div class="q-gutter-md">
+        <q-checkbox
+          v-for="(stat, index) in ['pending', 'approved', 'rejected']"
+          :key="index"
+          :val="stat"
+          v-model="input.status"
+          :label="$t(`payment.${stat}`)"
+          color="amber" />
+      </div>
+    </template>
     <template v-slot:body-cell-proof="props">
       <q-td :props="props">
         <q-avatar
@@ -43,7 +54,7 @@
           @click="openDetails(props.row)"
           dense
           color="primary"
-          icon="more_vert" />
+          icon="read_more" />
       </q-td>
     </template>
   </q-table>
@@ -55,7 +66,7 @@
   import {
     DocumentsPagination,
     PaginationInput,
-    Payment,
+    Payment, PaymentsPaginateInput,
     QueryPaymentsPaginateArgs
   } from 'src/graphql/types';
   import {gql} from '@apollo/client/core';
@@ -68,13 +79,14 @@
   import {getImage} from 'src/utils/utils';
   import {usePaymentStatus} from 'src/graphql/payment/payment-status';
   import formatDate = date.formatDate;
+  import {getAmount} from "src/utils/file";
 
   type Data = {
     paymentsPaginate: DocumentsPagination;
   }
 
   const QUERY = gql`
-    query DocumentsPaginate($input: PaginationInput!){
+    query DocumentsPaginate($input: PaymentsPaginateInput!){
         paymentsPaginate(input: $input){
             items {
                 ${PAYMENT_FIELDS}
@@ -84,12 +96,13 @@
         }
     }
   `;
-  const input = reactive<PaginationInput>({
+  const input = reactive<PaymentsPaginateInput>({
     from: '',
     limit: 15,
     page: 1,
     keyword: '',
-    to: ''
+    to: '',
+    status: ['pending'],
   });
 
   const { t } = useI18n();
@@ -137,7 +150,7 @@
     {
       name: 'amount',
       label: t('payment.amount'),
-      field: (doc: Payment) => doc.documents.reduce((cum, cur) => cum + cur.price,0),
+      field: (doc: Payment) => getAmount(doc.documents),
       sortable: true
     },
     {
@@ -173,6 +186,7 @@
   }
 
   const { statusLoading, submit } = usePaymentStatus();
+
 </script>
 
 <style lang="scss" scoped>
