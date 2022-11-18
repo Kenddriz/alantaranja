@@ -102,7 +102,7 @@
     page: 1,
     keyword: '',
     to: '',
-    status: ['approved'],
+    status: [],
   });
 
   const { t } = useI18n();

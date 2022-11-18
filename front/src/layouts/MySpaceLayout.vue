@@ -1,5 +1,5 @@
 <template>
-  <HomeLayout>
+  <MainLayout>
     <template v-if="$q.screen.lt.md" v-slot:button>
       <q-btn
         @click="rightMenu = !rightMenu"
@@ -63,11 +63,11 @@
 
       </q-list>
     </q-drawer>
-  </HomeLayout>
+  </MainLayout>
 </template>
 
 <script lang="ts" setup>
-  import HomeLayout from 'layouts/HomeLayout.vue';
+  import MainLayout from 'layouts/MainLayout.vue';
   import {ref} from 'vue';
   import {ROUTES_DATA} from 'layouts/routes-data';
   import {useSession} from 'src/graphql/users/session';

@@ -1,5 +1,5 @@
 <template>
-  <HomeLayout>
+  <MainLayout>
     <q-page-container class="bg-grey-3">
       <q-page class="row">
         <q-img
@@ -13,11 +13,11 @@
       </q-page>
     </q-page-container>
 
-  </HomeLayout>
+  </MainLayout>
 </template>
 
 <script lang="ts" setup>
-import HomeLayout from './HomeLayout.vue';
+import MainLayout from './MainLayout.vue';
 
 </script>
 

@@ -47,4 +47,5 @@ export default {
   all: 'All users',
   new: 'New user',
   update: 'Update user',
+  register: 'Register',
 }

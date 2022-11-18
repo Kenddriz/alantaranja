@@ -19,6 +19,7 @@
         />
       </CategoryDialog>
     </template>
+    <span class="text-deep-orange">{{ cartAmount }} AR</span>
   </BuyDocument>
 </template>
 
@@ -28,11 +29,14 @@
   import BuyDocument from '../../components/payment/BuyDocument.vue';
   import CategoryDialog from '../../components/CategoryDialog.vue';
   import {makeTree} from 'src/utils/utils';
+  import {useCart} from "src/graphql/payment/cart";
 
   const { families, loading } = useFamilies();
   const dialog = ref(false);
   const categories = ref<string[]>([]);
   const filterCategories = ref<string>('');
+
+  const { cartAmount } = useCart();
 </script>
 
 <style scoped>

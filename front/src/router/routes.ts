@@ -8,6 +8,10 @@ import {forumGuard} from "src/router/middleware/forum-guard";
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/',
+    component: import('pages/HomePage.vue'),
+  },
+  {
     path: '/forum',
     component: () => import('layouts/ForumLayout.vue'),
     children: [
@@ -25,9 +29,9 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: forumGuard,
   },
   {
-    path: '/',
+    path: '/welcome',
     name: 'welcome',
-    component: () => import('pages/HomePage.vue'),
+    component: () => import('pages/WelcomePage.vue'),
   },
   {
     path: '/auth',
